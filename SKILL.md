@@ -46,7 +46,7 @@ metadata:
 - **浏览器工具**：Oxford（curl 被 TLS 指纹检测挡返回空，浏览器完全正常；短语/习语用搜索框查）；Linggle（SPA，curl 只拿到壳，浏览器直达 `https://search.linggle.com/?q={query}`）。详见 sources.md
 - **被挡降级**：Collins、Merriam-Webster、Ludwig 被 Cloudflare 挡自动化访问 → Ludwig 的功能由 Linggle（填空/对比）+ Linguee（权威例句）+ FreeDictionary（Webster's/AHD/Collins 内容）覆盖
 - **Ngram 定量对比**：`node scripts/ngram.mjs "phrase A,phrase B"`，自动输出近年均值、峰值年份、趋势和相对倍数。用户文章是英式或美式时加 `--corpus en-GB-2019` / `--corpus en-US-2019` 分库查证；未说明变体时用默认 en-2019 总库，若该搭配在两库频率差异显著，分别报告并在结论里标注地区归属
-- **语义韵敏感词主动查**：commit、cause、pose、suffer、set in、happen、undergo、inflict、perpetrate、endure 等动词天生带氛围倾向，词典无此标签。用户问"哪里怪/语法对但感觉不对"，或建议中涉及这些词时，Linggle 查 `动词 + 冠词 + _`（如 commit a _）或 `动词 + _`，把返回伙伴按语义类别归类（消极/积极/中性/仅技术语境），伙伴分布即语义韵的直接证据；再用 Ngram 对比可疑搭配 vs 常规搭配交叉验证（如 commit an achievement vs achieve an achievement）
+- **语义韵敏感词主动查**：commit、cause、pose、suffer、set in、happen、undergo、inflict、perpetrate、endure 、bring about（积极韵，与 cause 相对）、rife、budge 等词天生带氛围倾向，词典无此标签，且**对母语者直觉也是隐形的，系统语料分析是唯一检测途径**（Liu, 2020; Jurko, 2021）。用户问"哪里怪/语法对但感觉不对"，或建议中涉及这些词时，Linggle 查 `动词 + 冠词 + _`（如 commit a _）或 `动词 + _`，把返回伙伴按语义类别归类（消极/积极/中性/仅技术语境），伙伴分布即语义韵的直接证据；再用 Ngram 对比可疑搭配 vs 常规搭配交叉验证（如 commit an achievement vs achieve an achievement）。**注意语域条件化**：同一词在不同语域可呈现相反极性（如 erupted 在体育新闻偏积极、硬新闻偏消极，Nelson, 2005），用户语境有明显语域特征时在结论中注明
 
 ### 第三步：证据分级
 
@@ -112,7 +112,7 @@ metadata:
    - 介词、冠词、词形问题
    - 语义韵敏感词（commit/cause/pose/suffer 等的宾语氛围是否匹配）
    - 语域错位（口语表达进了正式文）
-   - 不标：复杂句法、风格偏好、无查证依据的"感觉"
+   - 不标：复杂句法、风格偏好、无查证依据的"感觉"；用户明示的修辞性语义韵冲突（故意制造搭配不协调以达成讽刺或幽默效果，Jensen, 2024）不算错误
 3. **逐点查证**走标准流程（第一至四步），但批改模式下每点证据表精简到 1-2 条最强证据，可模仿例句只给全文最关键的 1-2 处，防止整篇报告过载
 4. **输出批改报告**，按原文顺序：
    - 原句片段 → 结论（✅/⚠️/❌）→ 一句话原话依据 + 来源 → 修改建议
