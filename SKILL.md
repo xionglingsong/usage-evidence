@@ -109,6 +109,8 @@ metadata:
 1. **范围声明先行**：告知用户本次检查用词层（搭配、介词、词形、语义韵、语域），不含语法句法——语料查证对复杂句法效果低（Crosthwaite, 2017）
 2. **标记可疑点**，只标本 skill 强项类：
    - 搭配可疑（中文直译痕迹、动宾反常，如 strong rain / accept an interview）
+   - 虚化动词错配（do/make/take + 名词的错选——中国学习者第一大搭配错误源，92.3% 的此类错误遵循普通话语义模式，do 型占 75%，Zhu, 2022; Liang & Dong, 2022，如 do exercise 做题）
+   - 名词复合直译（词性混淆型 Chinglish，如 today morning、freedom life、singers match，Zhu, 2022）
    - 介词、冠词、词形问题
    - 语义韵敏感词（commit/cause/pose/suffer 等的宾语氛围是否匹配）
    - 近义词互换导致的韵错位（如 gain/obtain 被当完全同义互换——母语者 gain 限积极韵、obtain 中性，Zhang, 2009；cause/lead to 同理）
