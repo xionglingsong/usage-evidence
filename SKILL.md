@@ -82,7 +82,7 @@ metadata:
 - 语域/地区/年代条件（如有）：有语域标注时必须引用原话（如 mitigate 词条音标后的 "(formal)"）；同义替换时给出级别标注（如牛津 "From the topic POLITICS C1"），帮用户判断这个词对自己的难度
 
 ## 可模仿例句（正例输入，2-3 条词典原话）
-从查到的词典例句中挑 2-3 条最贴近用户语境的，逐字引用，并提炼可直接仿写的框架：
+从查到的词典例句中挑 2-3 条最贴近用户语境的，逐字引用，并提炼可直接仿写的框架。**生词防护**：优先选不含超纲生词的例句；若最佳例句含 CEFR 高阶词，括注中文释义（38.5% 的学习者曾因语料生词受挫，Lusta et al., 2025）：
 - "We had heavy rain all day."（Cambridge）→ 框架 have + heavy + 名词
 - "The government is trying to mitigate the effects of the crisis."（OALD）→ mitigate the effects of …
 
