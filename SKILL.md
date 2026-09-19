@@ -107,7 +107,7 @@ metadata:
 文献依据：无预标记的独立纠错是认知难题，成功实现都是"先标记错误 → 再语料查询"（Chambers & O'Sullivan, 2004; Crosthwaite, 2017; Tono et al., 2014; Li, 2023）。本 skill 的 AI 承担标记角色，语料承担裁判角色。
 
 1. **范围声明先行**：告知用户本次检查用词层（搭配、介词、词形、语义韵、语域），不含语法句法——语料查证对复杂句法效果低（Crosthwaite, 2017）
-2. **标记可疑点**，只标本 skill 强项类：
+2. **标记可疑点**，只标本 skill 强项类。**一致性启发式优先**：中英逐词对应的搭配（强风 strong wind）有一致性促进、风险低；中英不对应的（浓茶正确说法是 strong tea 而非直译 dense tea，强降雨是 heavy rain 而非 strong rain）是负迁移高发区，优先标记（Min et al., 2023; Wang, 2011——83.7% 的虚化动词产出直接镜像中文结构）
    - 搭配可疑（中文直译痕迹、动宾反常，如 strong rain / accept an interview）
    - 虚化动词错配（do/make/take + 名词的错选——中国学习者第一大搭配错误源，92.3% 的此类错误遵循普通话语义模式，do 型占 75%，Zhu, 2022; Liang & Dong, 2022，如 do exercise 做题）
    - 名词复合直译（词性混淆型 Chinglish，如 today morning、freedom life、singers match，Zhu, 2022）
