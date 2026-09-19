@@ -35,6 +35,7 @@ metadata:
 | E 译法查证 | "压力大 = big pressure?" | Linguee 平行句 → Ngram → 词典 |
 | F 同义辨析 | "A 和 B 用哪个" | Thesaurus.com → 双词典对比 → Ngram |
 | G 搭配发现 | "play a role 后面接什么""这里该用哪个介词" | Linggle 填空（`_`/`*`/`?`/词性标签）→ 词典例句 |
+| H 语义韵查证 | "commit success 哪里怪""这个词什么感情色彩""语法对但感觉不对" | Linggle 填空看搭配伙伴分布 → Ngram 交叉验证 → 词典释义 |
 
 不要全查 13 个源。词典直接收录（A 级）+ 语料高频（B 级）两条证据齐了即可下结论。
 
@@ -45,6 +46,7 @@ metadata:
 - **浏览器工具**：Oxford（curl 被 TLS 指纹检测挡返回空，浏览器完全正常；短语/习语用搜索框查）；Linggle（SPA，curl 只拿到壳，浏览器直达 `https://search.linggle.com/?q={query}`）。详见 sources.md
 - **被挡降级**：Collins、Merriam-Webster、Ludwig 被 Cloudflare 挡自动化访问 → Ludwig 的功能由 Linggle（填空/对比）+ Linguee（权威例句）+ FreeDictionary（Webster's/AHD/Collins 内容）覆盖
 - **Ngram 定量对比**：`node scripts/ngram.mjs "phrase A,phrase B"`，自动输出近年均值、峰值年份、趋势和相对倍数。用户文章是英式或美式时加 `--corpus en-GB-2019` / `--corpus en-US-2019` 分库查证；未说明变体时用默认 en-2019 总库，若该搭配在两库频率差异显著，分别报告并在结论里标注地区归属
+- **语义韵敏感词主动查**：commit、cause、pose、suffer、set in、happen、undergo、inflict、perpetrate、endure 等动词天生带氛围倾向，词典无此标签。用户问"哪里怪/语法对但感觉不对"，或建议中涉及这些词时，Linggle 查 `动词 + 冠词 + _`（如 commit a _）或 `动词 + _`，把返回伙伴按语义类别归类（消极/积极/中性/仅技术语境），伙伴分布即语义韵的直接证据；再用 Ngram 对比可疑搭配 vs 常规搭配交叉验证（如 commit an achievement vs achieve an achievement）
 
 ### 第三步：证据分级
 
@@ -57,7 +59,7 @@ metadata:
 
 ### 第四步：输出（判断先行，原话优先，建议挂靠原话）
 
-固定四段结构，顺序不可变。
+四段固定 + 一段按需（语义韵），顺序不可变。
 
 ```
 ## 结论
@@ -85,6 +87,12 @@ metadata:
 - "The government is trying to mitigate the effects of the crisis."（OALD）→ mitigate the effects of …
 
 纠正只解决这一次，仿写框架可复用。模仿是地道表达的习得路径，这一段不可省略。
+
+## 语义韵提示（涉及语义韵敏感词或 H 类查证时必给，其余情况省略）
+用 Linggle 填空列出该词的高频搭配伙伴，按语义类别归类展示，伙伴分布即氛围证据（百分比原样引用）：
+- commit a _ → crime 39.8% / felony 9.3% / sin 3.2% / murder 2.7% / fraud / robbery …（前 51 伙伴零积极词，transaction/file 等仅限技术语境）——Linggle
+- 结论一句话，如"commit 携带消极语义韵，成就类宾语应改用 achieve / make / attain"
+- 如有 Ngram 交叉验证（如 commit an achievement vs achieve an achievement 频率悬殊），一并引用
 
 ## 易错易混辨析
 - 此位置常见错误 + 反证数据（如 accept an interview，Linggle 前 51 高频动词中无此搭配）
