@@ -1,107 +1,101 @@
 # Usage Evidence
 
-**An evidence-based English usage verification skill for AI agents.** Instead of answering "is this phrase idiomatic?" from model intuition, the agent is forced to query real dictionaries and corpora first, then cite what it found.
+**把前 AI 时代的古法查词典，教给 AI。**
 
-写给英语学习者、译者和写作者的一个 AI Agent Skill：问"这个搭配能不能这样写"，AI 不再凭感觉回答，而是先查牛津、剑桥、朗文、Linguee、Google Books Ngram，拿真实证据再下结论。
+这是一个 evidence-based 的英语用法查证 skill。你问"这个搭配能不能这样写"，AI 不再凭语感回答，而是先去查牛津、剑桥、朗文、Linguee、Google Ngram，把查到的原话证据摆在你面前，再下结论。
 
----
+开源地址就是你现在看到的仓库。下面是这个 skill 的来龙去脉。
 
-## 为什么需要它
+## 故事从一个念头开始
 
-问 AI"strong rain 能写吗"，一般的回答是模型凭训练记忆给判断，听起来自信，但语感对学习者来说是黑箱，而且模型对低频搭配经常"幻觉式放行"。
+今天早上，我在写英文时又卡在一个搭配上。和过去几年一样，我打开牛津高阶查词，去 Linggle 看这个位置大家常用什么词，顺手在 Google Ngram 拉一条历时曲线对比两个候选说法。这是我多年的肌肉记忆，一套前 AI 时代的古法查词典流程。
 
-这个 Skill 把回答流程改成了硬约束：
+突然有个念头：这套动作是固定的，为什么不做成 skill，让 AI 替我执行？
 
-1. **每个结论必须有出处**——词典收录、词典例句、语料频率、平行例句，查到什么引用什么，禁止虚构
-2. **查不到 ≠ 不存在**——判"不能用"需要两路反证（词典未收录 + 语料频率≈0）
-3. **事实与推断分开**——频率数字是事实，"更地道"是推断，必须写明依据
-4. **网络失败如实报告**，不降级为凭感觉回答
+于是动手。第一步是实测我常用的十几个查证网站哪些还能被程序访问——牛津挡 curl 但浏览器能过，Collins 和韦氏被 Cloudflare 挡死但各有等价替代。一天下来，13 个源全部摸清，skill 的骨架立起来了。
 
-## 实测案例
+但故事到这里才刚开始。骨架有了，规则怎么定？证据给多少？怎么呈现？我不想凭感觉设计一个"听起来合理"的工具，于是去 Consensus 上搜语料库语言学的文献，本想找几篇撑撑场面。
 
-**"under the background of" 能用吗？**（"在……的背景下"的直译，Chinglish 高发区）
+结果挖出一座矿。
 
-Ngram 三短语对比（1900-2019，Google Books 英语语料）：
+## 挖下去才发现，古法有名字
 
-| 短语 | 相对频率 |
+我的古法，在学术界叫数据驱动学习（Data-Driven Learning, DDL）——让学习者直接查真实语料归纳用法。这条路已经走了三十年，而且证据硬得惊人：元分析显示它的总体效应量在组间设计中 d=0.95，前后测设计中 d=1.50（Boulton & Cobb, 2017），学到的搭配知识三个月后依然保持（Liu & Gablasova, 2023），56 个实验的元分析给学术写作教学的效应量是 d=1.209（Li & Zhang, 2026）。
+
+也就是说，我每天在做的事，是一套被反复验证过的学习方法。这个发现让我确定：这个 skill 值得认真做。
+
+## 但古法为什么一直没普及
+
+文献同样给出了冰冷的答案。职业译者中只有约 15% 在用专用语料库、17% 在用语料工具（Verplaetse & Lambrechts, 2019）。学习者的挫败有精确比例：34.6% 被截断的索引行劝退，38.5% 被语料里的生词干扰（Lusta et al., 2025）。COCA 的查询语法连英语专业的师范生都望而却步（Emir & Ekşi, 2023）。
+
+好方法卡在门槛上，三十年了。
+
+## 直接问 AI 不行吗
+
+这是最微妙的部分。AI 时代最自然的冲动就是直接问"这样写地道吗"，但语言评估研究给出了否定的答案，而且发在 PNAS 上：直接二分提问时，模型存在系统性的肯定回应偏向，对不合法句子的识别甚至低于随机水平（Dentella et al., 2023）。
+
+认知科学补上了更深层的一环：模型展现的是表层句法对齐，形式与功能在它那里是分离的——它能掌握罕见的句法形式，却抓不住语义蕴含（Mahowald et al., 2024）。而恰恰是意义层的现象最难查证，比如语义韵。
+
+更有意思的是一个结构性错位：模型的语言准确率随训练语料规模走，而不是随语法复杂度走（Pantelidou et al., 2025），所以**低频搭配是 LLM 最弱的地方——而低频精准搭配，恰恰是高级写作者的标志**（Naismith & Juffs, 2025）。LLM 最弱处，正是学习者最需要处。
+
+但文献没有把 AI 一棍子打死。同一个研究方向发现：在结构化对比评估的范式下，大模型与专业语言学家的判断收敛度可达 89%（Qiu et al., 2024）。最新的实证研究更直接：语料教学加上 AI 辅助，效果超过纯语料库教学，纯语料库教学又超过传统教学（Rong et al., 2026）。
+
+**AI 不是不行，是"直接当裁判"这个用法不行。** 把它挪到执行席——构造查询、跑检索、摆证据——它是优秀的。而这个方向也不是我一个人的想象：AntConc 已经集成了 ChatAI，CorpusMate 2.0 内置了 AI 助手，学界还有人在做通过协议连接语料引擎自主检索验证的智能体（Anthony, 2025; Crosthwaite, 2026; Yu et al., 2026）。这个 skill 是这个正在成形的范式的开源实现。
+
+## 文献教给这个 skill 的事
+
+二十三组文献检索（约 340 篇论文）之后，skill 的每条规则都有了出处。挑几条最意外的说。
+
+**为什么证据必须逐字引用原话，而不能让 AI 概括。** 索引行激发学习者的归纳推理，比直接给答案更能促成持久编码（Luo & Liao, 2015; Xu, 2026）。但证据也不能给多——海量语料罗列会引发过载与误读（Söğüt, 2024），所以证据表限量 3-5 条。
+
+**为什么每次都要附可模仿例句和仿写框架。** 学习者的接受性识别先于产出性使用发展（McGee, 2012; Dushku & Paek, 2021）——你看得出来 heavy rain 比 strong rain 好，不等于下次写得出来。仿写是"看得出→写得出"的桥，而高水平写作者的标志正是掌握大量不连续短语框架（Appel et al., 2024）。
+
+**为什么结尾固定一行教你自己查。** 动手查的记忆保持显著优于被动接受结果（Saeedakhtar et al., 2020）。这个 skill 的教育目标是让你最终不需要它。
+
+**为什么查到之后还要建议"未来阅读中留意八次"。** 眼动研究显示约 8 次接触就能让新搭配达到母语者级加工速度，但不复习两周就衰减（Pellicer-Sánchez et al., 2022; Cheng et al., 2025）。
+
+**为什么贴一段译文进来它会自动进入批改模式、先标记再查证。** 无预标记的独立纠错是认知难题——学习者自己发现不了问题，成功的实现都是"先标记错误 → 再语料查询"（Chambers & O'Sullivan, 2004; Li, 2023）。AI 承担标记，语料承担裁判。
+
+**为什么有一类查询专门查语义韵。** 语义韵是词通过习惯性搭配获得的评价性氛围——cause 天生搭配 death 和 damage，bring about 搭配 happiness 和 success，同样是"导致"，氛围一负一正。麻烦在于这种着色**对母语者的直觉也是隐形的**，系统语料分析是唯一检测途径（Liu, 2020; Jurko, 2021），而非母语教师同样对不齐（McGee, 2012）。中国学习者把 gain 和 obtain 当同义词互换用，而母语者的 gain 锁定积极韵、obtain 保持中性（Zhang, 2009）。词典也帮不上忙：查词后写出的词错误率可高达 60%（Pyo, 2020），连在线搭配词典的使用者都反而写出更多怪搭配（Cao, 2023）。词典管"什么意思"，语料管"怎么用"。
+
+**为什么批改时优先标记中英不对应的搭配。** 中国学习者的搭配错误有母语指纹：92.3% 的虚化动词错误遵循普通话语义模式，do 一个词就占此类错误的 75%（Zhu, 2022; Liang & Dong, 2022）。一致性效应研究给出了预判方法——中英逐词对应的搭配（强风 strong wind）风险低，不对应的（浓茶的正确说法是 strong tea 而非直译 dense tea）是高发区（Min et al., 2023）。
+
+**为什么对高水平用户会给一个"更老练"的选项。** 评分员更看重搭配老练度而非绝对无误，高级写作者的错误率反而更高，因为他们在挑战低频难搭配（Naismith & Juffs, 2025）。
+
+全部 30 余条设计决策与文献的对应关系，见 [RESEARCH.md](RESEARCH.md)。
+
+## 功能速览
+
+| 能力 | 说明 |
 |---|---|
-| in the context of | 基准（最高频） |
-| against the background of | 主流的 3.4% |
-| under the background of | **约 0.04%（主流的约四千分之一），接近零** |
+| 8 类查询 | 搭配查证 / 词义 / 语域 / 历时趋势 / 译法 / 同义辨析 / 搭配发现 / 语义韵 |
+| 13 个查证源 | 牛津、剑桥、朗文、Linguee、Google Ngram、Linggle、Etymonline、Thesaurus.com 等，全部实测 |
+| 批改模式 | 贴一段英文或译文，AI 按九类标记可疑点（搭配直译、虚化动词、名词复合直译、介词冠词、语义韵、近义词错位、语域、归因词块定位、同框架重复），逐点查证出报告 |
+| 五段教学输出 | 结论 → 原话证据（限量）→ 语境建议（语域/CEFR 标注）→ 可模仿例句（仿写框架）→ 易错易混辨析 + 下次自查一行 |
 
-结论：标准搭配是后两者，under the background of 是中式直译。数据里还藏了一个细节：它近三十年上升了近 39 倍，但基数极小——恰好说明这是中国作者正在"带进"英语而非英语固有的用法。
+实测效果示例：
 
-**"接受采访"怎么翻？** accept an interview？
-
-Linggle 语料库 `v. an interview` 动词搭配排行前 51 名里没有 accept：arrange / schedule / conduct（安排方）、give / grant（受访者方——英语里采访是"给出"的）、attend / get（参加方）。联合国文件平行语料里"接受采访"全部译作 be interviewed。
-
-**damages 是 damage 的复数吗？**
-
-剑桥词典将 damages 立为独立词条，语法标注 [plural]，释义"支付给受害者的钱"——法律意义上的"赔偿金"，不是"多种损害"。
-
-## 工作流
-
-用户提问 → 按类型分流 → 选 2-4 个源查证 → 按证据分级 → 输出"结论 + 证据表 + 替代建议"。
-
-| 问题类型 | 典型问题 | 首选源 |
-|---|---|---|
-| 搭配查证 | "strong rain 能写吗" | Ngram / Linggle → 词典例句 → Linguee |
-| 词义存在性 | "X 有这个义项吗" | Oxford → Cambridge → FreeDictionary |
-| 语域正式度 | "这是俚语/过时/正式吗" | 词典语域标注 → Ngram 趋势 → Urban Dictionary |
-| 历时趋势 | "这用法过时了吗" | Ngram → Etymonline |
-| 译法查证 | "压力大 = big pressure?" | Linguee 平行句 → Ngram → 词典 |
-| 同义辨析 | "A 和 B 用哪个" | Thesaurus.com → 双词典对比 |
-| 搭配发现 | "这里该用哪个介词" | Linggle 填空 → 词典例句 |
-
-证据分级：A 词典明确收录 > B 语料高频（Ngram / Linggle 百分比）> C 权威平行例句（Linguee 中联合国等来源）> D 反证。
-
-## 支持的查证源（13 个，2026-09 实测）
-
-| 源 | 访问方式 | 状态 |
-|---|---|---|
-| Oxford Learner's Dictionaries | 浏览器 | ✅ 挡 curl TLS 指纹，浏览器正常 |
-| Cambridge Dictionary | curl 直连 | ✅ 释义/例句/英美标注可程序化提取 |
-| Longman LDOCE | curl 直连 | ✅ 例句量最大 |
-| Etymonline | curl 直连 | ✅ 词源与首用年代 |
-| Linguee | curl 直连 | ✅ 中英平行句带权威来源 |
-| Google Books Ngram | curl + 代理 | ✅ JSON API，配 ngram.mjs 自动统计 |
-| Linggle | 浏览器 | ✅ 搭配发现：`_` `*` `?` 词性标签语法 |
-| Urban Dictionary | curl + 代理 | ✅ 俚语识别（社区内容，不作标准用法证据） |
-| TheFreeDictionary | curl + 代理 | ✅ 整合 AHD / Webster's / Collins 部分 |
-| Thesaurus.com | curl + 代理 | ✅ 按义项分组的同反义词 |
-| Collins | — | ❌ Cloudflare 挡自动化（降级 FreeDictionary） |
-| Merriam-Webster | — | ❌ 同上（降级 FreeDictionary + Cambridge 美式） |
-| Ludwig | — | ❌ 同上（功能由 Linggle + Linguee 覆盖） |
-
-每个源的 URL 模板、HTML 提取选择器、反爬状态、降级链都写在 `references/sources.md`，全部经过实测验证。
+- "under the background of" 在 Google Books 两百年语料里只有 in the context of 的约万分之四——而且它近三十年涨了 39 倍，恰好说明是中国作者正在把它带进英语，不是英语固有搭配
+- "接受采访"直译 accepted an interview——Linggle 语料里 an interview 前 51 个高频动词中没有 accept，英语里受访者是把采访"给"出去的（give / grant an interview）
+- 学术写作想用 main aim 还是 primary aim——Linggle 直接给出分布，main 56.5%，primary 12%，principal 7.6%
 
 ## 安装
 
-适用于任何支持 SKILL.md 格式的 Agent（Ekko、Claude Code 等）。
-
-**Ekko：**
-
-```bash
-# 将仓库放入 skills 目录的 writing/ 分类下
-git clone https://github.com/xionglingsong/usage-evidence.git \
-  ~/.hermes-web-ui/.ekko/skills/default/writing/usage-evidence
-```
-
-**Claude Code：**
+适用于任何支持 SKILL.md 格式的 Agent 环境（Ekko、Claude Code 等）。
 
 ```bash
 git clone https://github.com/xionglingsong/usage-evidence.git \
   ~/.claude/skills/usage-evidence
 ```
 
-依赖：`curl`、`node`（ngram.mjs 用）、可用的浏览器自动化工具（查 Oxford 和 Linggle 需要）。中国大陆网络环境：4 个源需要代理，其余可直连，见 sources.md。
+依赖 curl 和 node，查牛津和 Linggle 需要浏览器自动化。中国大陆网络环境下 5 个源直连、4 个源走代理，详见 `references/sources.md`。
 
-## 局限
+## 边界（诚实交代）
 
-- Ngram 是书籍语料（截至 2019），口语和最新网络用语覆盖弱，新词用 Urban Dictionary + Linguee 补
-- Collins / Merriam-Webster / Ludwig 被 Cloudflare 挡住自动化访问，本 Skill 用等价源降级覆盖
-- 源网站的页面结构或反爬策略变化后，sources.md 里的选择器需要更新
+这个 skill 管用词，不管语法——语料查询对语法准确性的提升不显著（Kızıl, 2023），语法请交给专门的检查工具。Ngram 是书籍语料，口语和 2019 后新词覆盖弱。通用语料未必反映具体学科的惯例（Flowerdew & Petrić, 2024），学科写作的结论保持保守。查不到就如实说查不到，不硬下结论。
+
+最后，工具解决的只是查证这一环。素材积累、精读、仿写，还是得自己下功夫——任何工具都替代不了长期的语言积累。
 
 ## License
 
-MIT。各词典与语料网站内容版权归各自所有，本 Skill 只是查询流程编排，引用时请注明原始来源。
+MIT。各词典与语料网站内容版权归各自所有，本 skill 只是查询流程编排，引用时请注明原始来源。
