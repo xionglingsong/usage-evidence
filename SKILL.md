@@ -44,7 +44,7 @@ metadata:
 - **curl + 代理**：UrbanDictionary、FreeDictionary、Ngram、Thesaurus —— 先 `export https_proxy=<你的代理地址>（示例 http://127.0.0.1:7890 为 Clash 默认端口）`
 - **浏览器工具**：Oxford（curl 被 TLS 指纹检测挡返回空，浏览器完全正常；短语/习语用搜索框查）；Linggle（SPA，curl 只拿到壳，浏览器直达 `https://search.linggle.com/?q={query}`）。详见 sources.md
 - **被挡降级**：Collins、Merriam-Webster、Ludwig 被 Cloudflare 挡自动化访问 → Ludwig 的功能由 Linggle（填空/对比）+ Linguee（权威例句）+ FreeDictionary（Webster's/AHD/Collins 内容）覆盖
-- **Ngram 定量对比**：`node scripts/ngram.mjs "phrase A,phrase B"`，自动输出近年均值、峰值年份、趋势和相对倍数
+- **Ngram 定量对比**：`node scripts/ngram.mjs "phrase A,phrase B"`，自动输出近年均值、峰值年份、趋势和相对倍数。用户文章是英式或美式时加 `--corpus en-GB-2019` / `--corpus en-US-2019` 分库查证；未说明变体时用默认 en-2019 总库，若该搭配在两库频率差异显著，分别报告并在结论里标注地区归属
 
 ### 第三步：证据分级
 
@@ -57,7 +57,7 @@ metadata:
 
 ### 第四步：输出（判断先行，原话优先，建议挂靠原话）
 
-固定三段结构，顺序不可变。
+固定四段结构，顺序不可变。
 
 ```
 ## 结论
@@ -77,7 +77,14 @@ metadata:
 针对用户当前的句子/语境：
 - 怎么写，如"改用 heavy rain，依据 OALD 例句原话 …"
 - 怎么翻译，挂平行句原话，说明视角差异（如受访者视角用 be interviewed，强调"同意接受"用 grant）
-- 语域/地区/年代条件（如有）
+- 语域/地区/年代条件（如有）：有语域标注时必须引用原话（如 mitigate 词条音标后的 "(formal)"）；同义替换时给出级别标注（如牛津 "From the topic POLITICS C1"），帮用户判断这个词对自己的难度
+
+## 可模仿例句（正例输入，2-3 条词典原话）
+从查到的词典例句中挑 2-3 条最贴近用户语境的，逐字引用，并提炼可直接仿写的框架：
+- "We had heavy rain all day."（Cambridge）→ 框架 have + heavy + 名词
+- "The government is trying to mitigate the effects of the crisis."（OALD）→ mitigate the effects of …
+
+纠正只解决这一次，仿写框架可复用。模仿是地道表达的习得路径，这一段不可省略。
 
 ## 易错易混辨析
 - 此位置常见错误 + 反证数据（如 accept an interview，Linggle 前 51 高频动词中无此搭配）

@@ -26,7 +26,7 @@ export https_proxy=<你的代理地址>  # 示例 http://127.0.0.1:7890 为 Clas
 
 curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36`
 
-## 1. Oxford Learner's（OALD/OALDE，经典 ESL 学习者词典）
+## 1. Oxford Learner's（OALD/OALDE，用户最常用，每天在用）
 
 - URL 模板：
   - 英式：`https://www.oxfordlearnersdictionaries.com/definition/english/{word}`
@@ -39,6 +39,11 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
   - 搜索会跳到主干词条（如 raining cats and dogs → cat 词条），习语在该页 Idioms 板块
 - `?q=` 查询参数无效（跳回首页），不要用
 - 词条页快照可直接读出：义项编号+释义、Idioms 板块（含 British English/informal 等语域标注）、Collocations、Word Origin、Other results 同词族链接、Oxford Learner's Dictionary of Academic English 入口
+- 教学增强信息（2026-09-19 实测 mitigate 词条）：
+  - 语域标注紧跟音标，如 mitigate 词条的 "(formal)"
+  - 同义词直接给出，如 "SYNONYM alleviate"，可 browser_click 跟进对比
+  - 级别标注两种形态——词头区域的 Oxford 3000/5000 徽标 + CEFR 字母、topic 标签（如 rain 页 "TOPICS WeatherA1"、词云板块 "From the topic POLITICS C1"），备考和选词难度判断用
+  - "See … in the Oxford Advanced American Dictionary" 与 "… Dictionary of Academic English" 入口，英美差异和学术语域可直接跳转
 - 猜错 URL 的错误页有 "Did you mean" 建议链接，可直接 browser_click 跟进
 
 ## 2. Cambridge（结构最规整，curl 解析首选）
@@ -99,6 +104,7 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
   - corpus：`en-2019`（默认总库）/ `en-US-2019` / `en-GB-2019` / `eng_2019`（百万书平衡库，查 19 世纪前用它）
 - curl + 代理，或直接用 `scripts/ngram.mjs`（自动统计均值/峰值/趋势/倍数）
 - 解读：数值为该短语占语料库全部对应长度词组的比例；绝对值无意义，**相对倍数和趋势才有意义**
+- 英美分库教学用法：en-GB-2019 与 en-US-2019 分别查同一搭配，频率差异大即该搭配有明显地区归属（英式习语常见此类），结论需标注地区；ngram.mjs 用 `--corpus` 参数切换
 - 局限：书籍语料，口语和 2019 后新词覆盖弱
 
 ## 9. Thesaurus.com（同义词）
