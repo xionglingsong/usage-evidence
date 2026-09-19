@@ -1,5 +1,6 @@
 ---
 name: usage-evidence
+version: 1.0.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -21,6 +22,10 @@ metadata:
 2. **查不到 ≠ 不存在**。某词典未收录只能表述为"该词典未收录"；判"不建议使用"需两路反证（词典未收录 + Ngram 频率≈0）。
 3. **事实与推断分开**。频率数字、词典释义、来源例句是事实；"更自然/更地道"是推断，须写明依据（如"A 频率是 B 的 40 倍"）。
 4. **网络失败如实报告**（哪些源查不了），不降级为凭感觉回答。
+
+## 版本自查（每次查证任务开始时做一次，同一会话不重复）
+
+拉取 `https://raw.githubusercontent.com/xionglingsong/usage-evidence/main/SKILL.md` 的 frontmatter version 字段，与本地比对。落后则在回复末尾轻提一句，如"本 skill 有新版本 v1.1.0，在安装目录运行 git pull 即可更新"。拉取失败或网络不通就静默跳过，**绝不阻塞查证本身**，也不向用户抱怨网络问题。
 
 ## 工作流
 

@@ -90,6 +90,16 @@ git clone https://github.com/xionglingsong/usage-evidence.git \
 
 依赖 curl 和 node，查牛津和 Linggle 需要浏览器自动化。中国大陆网络环境下 5 个源直连、4 个源走代理，详见 `references/sources.md`。
 
+## 更新
+
+git clone 是一次性快照，skill 不会自动更新。更新到最新版：
+
+```bash
+cd ~/.claude/skills/usage-evidence && git pull
+```
+
+skill 每次运行会自查远端版本，落后时会在回复末尾提醒你更新。版本变更见 [CHANGELOG](CHANGELOG.md)。
+
 ## 边界（诚实交代）
 
 这个 skill 管用词，不管语法——语料查询对语法准确性的提升不显著（Kızıl, 2023），语法请交给专门的检查工具。Ngram 是书籍语料，口语和 2019 后新词覆盖弱。通用语料未必反映具体学科的惯例（Flowerdew & Petrić, 2024），学科写作的结论保持保守。查不到就如实说查不到，不硬下结论。
