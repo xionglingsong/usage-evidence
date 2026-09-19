@@ -31,9 +31,9 @@ metadata:
 | A 搭配查证 | "strong rain 能写吗" | Ngram/Linggle 对比 → Oxford/LDOCE 例句 → Linguee |
 | B 词义存在性 | "X 有这个义项吗" | Oxford（浏览器）→ Cambridge → FreeDictionary |
 | C 语域/正式度 | "这是俚语/过时/正式吗" | 词典语域标注 → Ngram 趋势 → Urban Dictionary |
-| D 历时趋势 | "这用法流行还是过时了" | Ngram → Etymonline |
+| D 历时趋势 | "这用法流行还是过时了" | Ngram → Etymonline；输出附理据锚点（见第四步语境建议） |
 | E 译法查证 | "压力大 = big pressure?" | Linguee 平行句 → Ngram → 词典 |
-| F 同义辨析 | "A 和 B 用哪个" | Thesaurus.com → 双词典对比 → Ngram |
+| F 同义辨析 | "A 和 B 用哪个" | Thesaurus.com → 双词典对比 → Ngram；输出附语域光谱三档（见第四步语境建议） |
 | G 搭配发现 | "play a role 后面接什么""这里该用哪个介词" | Linggle 填空（`_`/`*`/`?`/词性标签）→ 词典例句 |
 | H 语义韵查证 | "commit success 哪里怪""这个词什么感情色彩""语法对但感觉不对" | Linggle 填空看搭配伙伴分布 → Ngram 交叉验证 → 词典释义 |
 
@@ -80,6 +80,8 @@ metadata:
 - 怎么写，如"改用 heavy rain，依据 OALD 例句原话 …"。对 C1+ 用户，除稳妥选项外附一个更老练的进阶选项（低频但词典明确收录的强搭配，标注难度）——评分员更看重搭配老练度而非绝对无误（Naismith & Juffs, 2025）
 - 怎么翻译，挂平行句原话，说明视角差异（如受访者视角用 be interviewed，强调"同意接受"用 grant）
 - 语域/地区/年代条件（如有）：有语域标注时必须引用原话（如 mitigate 词条音标后的 "(formal)"）；同义替换时给出级别标注（如牛津 "From the topic POLITICS C1"），帮用户判断这个词对自己的难度
+- **语域光谱三档**（F 类及同义替换场景必给）：同一意思给 formal / neutral / informal 三个版本并标注依据，如 very important → crucial（formal）/ important（neutral）/ a big deal（informal）——学习者常见困境是只会一个版本到处用，三档光谱防语域错位
+- **理据锚点**（D 类及涉及搭配成因时必给）：从 Etymonline 拉一行词源理据让搭配可推导，如 strong 本义"绷紧"（与 string 同源）故管"力"（strong wind/strong opinion），heavy 是"重量"故管"量大"（heavy rain/heavy traffic）——讲得通的搭配从任意记忆变成可推导规则，深加工决定留存
 
 ## 可模仿例句（正例输入，2-3 条词典原话）
 从查到的词典例句中挑 2-3 条最贴近用户语境的，逐字引用，并提炼可直接仿写的框架。**生词防护**：优先选不含超纲生词的例句；若最佳例句含 CEFR 高阶词，括注中文释义（38.5% 的学习者曾因语料生词受挫，Lusta et al., 2025）：
