@@ -27,7 +27,7 @@ Ngram 三短语对比（1900-2019，Google Books 英语语料）：
 |---|---|
 | in the context of | 基准（最高频） |
 | against the background of | 主流的 3.4% |
-| under the background of | **0.0004%，接近零** |
+| under the background of | **约 0.04%（主流的约四千分之一），接近零** |
 
 结论：标准搭配是后两者，under the background of 是中式直译。数据里还藏了一个细节：它近三十年上升了近 39 倍，但基数极小——恰好说明这是中国作者正在"带进"英语而非英语固有的用法。
 
