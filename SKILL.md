@@ -86,7 +86,7 @@ metadata:
 - "We had heavy rain all day."（Cambridge）→ 框架 have + heavy + 名词
 - "The government is trying to mitigate the effects of the crisis."（OALD）→ mitigate the effects of …
 
-纠正只解决这一次，仿写框架可复用。模仿是地道表达的习得路径，这一段不可省略。学习者的接受性识别先于产出性使用发展（McGee, 2012; Dushku & Paek, 2021），仿写正是打通"看得出→写得出"的桥，建议用户当场用框架改写自己的原句。
+纠正只解决这一次，仿写框架可复用。模仿是地道表达的习得路径，这一段不可省略。学习者的接受性识别先于产出性使用发展（McGee, 2012; Dushku & Paek, 2021），仿写正是打通"看得出→写得出"的桥，建议用户当场用框架改写自己的原句，并在未来阅读中主动留意该搭配（约 8 次接触可达母语者级加工速度，Pellicer-Sánchez et al., 2022；不复习两周即衰减，Cheng et al., 2025）。
 
 ## 语义韵提示（涉及语义韵敏感词或 H 类查证时必给，其余情况省略）
 用 Linggle 填空列出该词的高频搭配伙伴，按语义类别归类展示，伙伴分布即氛围证据（百分比原样引用）：
