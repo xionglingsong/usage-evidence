@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.2.0
+version: 1.3.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -79,7 +79,7 @@ metadata:
 - 每段先一句要点再给细节，表格不超过 5 行，批改报告的每条写成自然句或短列表（结构指示里的箭头链只是给 AI 的组织逻辑，不照抄渲染）
 - 每个元素自问"这对用户写下一篇或翻下一句有什么用"，答不上来的删掉——服务搭配教学与写作翻译实践是唯一目的
 - **会话级去重**：同一会话内，"8 次接触"提示、理据框架的机制说明、仿写方法说明只在首次出现时给，之后省略或一笔带过；"下次自查"按本次错误类型轮换工具（搭配→Linggle、语域→朗文、译法→Linguee、词义→牛津/剑桥），不重复同一条
-- **链接一律行内**（来源名做锚文本），证据表单元格内只写来源名不放链接
+- **链接一律行内**（来源名做锚文本，任何位置不裸露长 URL）；**证据表「出处」列必须写成 Markdown 超链接**，锚文本用来源名，用户点开直达当次查证页面
 
 ```
 ## 结论
@@ -88,12 +88,12 @@ metadata:
 ## 原话证据（逐字引用查证页面，标注来源）
 | 原话 / 数据 | 出处 |
 |---|---|
-| "[uncountable, singular] water that falls from the sky in separate drops" | OALD rain 名词 义项 1 |
-| "We had heavy rain all day." | Cambridge rain 例句 |
-| heavy rain 760,000 次（89.9%）| Linggle 查询结果表 |
-| "所有接受采访者做出了匿名的承诺" ↔ "All respondents have been promised anonymity" | Linguee（daccess-ods.un.org） |
+| "[uncountable, singular] water that falls from the sky in separate drops" | [OALD rain 名词义项 1](https://www.oxfordlearnersdictionaries.com/definition/english/rain_1) |
+| "We had heavy rain all day." | [Cambridge rain 例句](https://dictionary.cambridge.org/dictionary/english/rain) |
+| heavy rain 760,000 次（89.9%）| [Linggle 查询结果](https://search.linggle.com/?q=heavy+rain) |
+| "所有接受采访者做出了匿名的承诺" ↔ "All respondents have been promised anonymity" | [Linguee 平行句（daccess-ods.un.org）](https://www.linguee.com/english-chinese/search?query=promised+anonymity) |
 
-文本类证据用引号逐字引用，不改写、不缩写、不"翻译成自己的话"；频率类原样给数字与百分比；双语平行句两侧都引。**每条证据附可溯源的真实链接**（Markdown 格式，来源名做锚文本），用户可自行打开源头核对——把"信任本 skill"变成"可验证"（批判性使用证据，Liu et al., 2024）。链接纪律：按 references/sources.md 的 URL 模板构造或用实际访问地址，**禁止编造 URL**；Ngram 附可视化页面（如 books.google.com/ngrams/graph?content=heavy+rain,strong+rain&year_start=1900&year_end=2019&corpus=en-2019），不是数据接口；牛津附最终词条页（如 oxfordlearnersdictionaries.com/definition/english/rain_1），不是搜索过程页；Linggle 附查询式 URL（如 search.linggle.com/?q=commit+a+_），用户点开即见完整分布。**精选 3-5 条最强证据，按 A→C 分级排序，A 级优先**——DDL 研究证实海量语料罗列会引发读者过载与误读（Söğüt, 2024; Farooqui, 2025），宁精勿滥。查不到原话的源如实标注"该源未返回可用原文"。
+文本类证据用引号逐字引用，不改写、不缩写、不"翻译成自己的话"；频率类原样给数字与百分比；双语平行句两侧都引。**每条证据附可溯源的真实链接**（Markdown 格式，来源名做锚文本——表格出处列同样如此），用户点开出处即可核对——把"信任本 skill"变成"可验证"（批判性使用证据，Liu et al., 2024）。链接纪律：按 references/sources.md 的 URL 模板构造或用实际访问地址，**禁止编造 URL**；Ngram 附可视化页面（如 books.google.com/ngrams/graph?content=heavy+rain,strong+rain&year_start=1900&year_end=2019&corpus=en-2019），不是数据接口；牛津附最终词条页（如 oxfordlearnersdictionaries.com/definition/english/rain_1），不是搜索过程页；Linggle 附查询式 URL（如 search.linggle.com/?q=commit+a+_），用户点开即见完整分布。**精选 3-5 条最强证据，按 A→C 分级排序，A 级优先**——DDL 研究证实海量语料罗列会引发读者过载与误读（Söğüt, 2024; Farooqui, 2025），宁精勿滥。查不到原话的源如实标注"该源未返回可用原文"。
 
 ## 语境建议（每条必须指明依据上面哪条原话）
 针对用户当前的句子/语境：
