@@ -17,6 +17,12 @@
 | Collins | 不可用 | Cloudflare 挡 curl 和浏览器 |
 | Merriam-Webster | 不可用 | Cloudflare Turnstile 连浏览器都过不去 |
 | Ludwig | 不可用 | Cloudflare Turnstile，浏览器验证也过不去 |
+| OpenAlex | curl 直连（免费 API，无 key） | OK，2026-09-20 实测（短语计数 + 按年趋势 + 学科过滤） |
+| PubMed E-utilities | curl 直连 | OK，生医学科条件化 |
+| arXiv API | curl 直连（必须 https） | OK，理工学科条件化 |
+| Google 高级检索式 | 浏览器工具专用 | OK（curl 返回 200 但是 JS 壳，无结果内容），低频使用 |
+| Semantic Scholar | 降级 | 无 key 连续 429，功能由 OpenAlex 覆盖 |
+| Google Scholar | 降级 | 自动化访问 302 跳验证页 |
 
 代理设置（curl 需要代理的源时先执行）：
 
@@ -152,6 +158,43 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
 
 - Cloudflare Turnstile：curl 403，浏览器点了验证框也过不去
 - 降级：FreeDictionary（Webster's Revised Unabridged）+ Cambridge 美式标注
+
+## 14. OpenAlex（学术语域主力，全学科约 2.5 亿文献）
+
+学术版 Ngram + 学科条件化查证的核心源。免费无 key，直连，建议带 `&mailto=` 参数提高礼貌限额。
+
+- **短语计数**（检索范围 title+abstract，部分含全文）：`https://api.openalex.org/works?search=%22短语URL编码%22&per-page=1` → 读 `meta.count`。两个候选写法分别计数，即学科语料内的相对频率对比
+- **学术历时趋势**：加 `&group_by=publication_year` → `group_by[0]` 数组各年 bucket（`key_display_name` 年份 + `count` 篇数）。可与 Google Ngram 通用趋势对照，回答「这个学术用法在涨还是退」
+- **学科条件化**（= Google `site:` 的 API 版）：先 `https://api.openalex.org/concepts?search=学科名` 拿 `id`，再 `&filter=concepts.id:Cxxxxxxx` 限定学科内计数
+- **给用户的锚链接**（web 版可浏览）：`https://openalex.org/works?search=%22短语%22`
+
+## 15. PubMed E-utilities（生医学科）
+
+- **计数**：`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%22短语%22&retmode=json` → `esearchresult.count`
+- 字段限定：`%22短语%22[Title]` 或 `[Abstract]` 可收紧到标题/摘要
+- **锚链接**：`https://pubmed.ncbi.nlm.nih.gov/?term=%22短语%22`
+
+## 16. arXiv API（理工学科）
+
+- **计数**：`https://export.arxiv.org/api/query?search_query=all:%22短语%22&max_results=1` → Atom XML 里 `<opensearch:totalResults>`。**必须 https**（http 返回空响应）
+- **锚链接**：`https://arxiv.org/search/?query=%22短语%22&searchtype=all`
+
+## 17. Google 高级检索式（语域对比，浏览器专用）
+
+curl 返回 200 但为 JS 壳（实测无 h3 标题无结果链接），必须浏览器工具渲染后解析。
+
+- **用法**：精确短语双引号 + site: 过滤做语域量级对比，例 `"under the background of" site:edu` vs `"in the context of" site:edu`
+- **site 维度**：edu（英语世界高校）、edu.cn（国内高校，负迁移重灾区对照）、ac.uk（英式学术）、gov（公文）。对比两个候选时同会话同参数查询，比值相对可靠；绝对数字是估算值（随 cookie/地区漂移），只做量级证据不做精确频率
+- **通配符不可靠**：Google 的 `*` 短语内通配基本不响应（2026-09-20 实测），通配需求用 Linggle `_`（源 10 已覆盖）
+- **低频纪律**：连续触发验证码就停，本轮换 OpenAlex；页面解析看真实结果标题密度而非只看结果数
+- **锚链接**：直接给当次检索 URL（google.com/search?q=...）
+
+## 学术源降级记录（2026-09-20 实测）
+
+- **Semantic Scholar API**：无 key 共享池限流狠（连续 429），学术 API 需求直接用 OpenAlex 覆盖
+- **Google Scholar**：自动化访问 302 跳验证，学术频次证据由 OpenAlex / PubMed 覆盖
+- **FLAX / BAWE**：奥克兰大学 FLAX 服务已不可达（直连与代理均 000），BAWE 学术书面语料暂无公开查询入口
+- **SkELL**：无公开稳定 API（端点返回空查询壳），语料定位（学术+新闻+维基混合）与 Linggle 重叠，不引入
 
 ## code_exec 提取代码模式（Node，无第三方依赖）
 

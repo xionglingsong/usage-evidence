@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.4.0（2026-09-20）
+
+新增 I 类学术语域查证（回应通用语料查不了学科惯例的边界局限，Flowerdew & Petrić, 2024）：
+
+- **OpenAlex**（主力）：约 2.5 亿文献 title+abstract 短语精确计数、`group_by=publication_year` 学术历时趋势（学术版 Ngram）、concepts 学科过滤（Google `site:` 的 API 版替代）
+- **PubMed E-utilities**（生医条件化）：esearch 计数，支持 Title/Abstract 字段限定
+- **arXiv API**（理工条件化）：必须 https，Atom XML totalResults
+- **Google 高级检索式**（语域对比）：精确短语 + site:edu/edu.cn，浏览器专用（curl 实测为 JS 壳）；结果数为估算只做同参数量级对比；Google `*` 通配不响应，通配需求由 Linggle `_` 承担
+- 降级记录：Semantic Scholar（无 key 连续 429）、Google Scholar（302 验证墙）、FLAX/BAWE（服务不可达）、SkELL（无稳定 API）
+- 边界条款升级：学科惯例问题从「保守声明 + 看通用语料」改为「直接查学科源，冲突时学科源优先」
+
 ## 1.3.0（2026-09-20）
 
 证据表出处列可跳转（来自用户实测反馈：出处是纯文字，无法点开核对）：
