@@ -196,6 +196,16 @@ curl 返回 200 但为 JS 壳（实测无 h3 标题无结果链接），必须�
 - **Google Scholar**：自动化访问 302 跳验证，学术频次证据由 OpenAlex / PubMed 覆盖
 - **FLAX / BAWE**：奥克兰大学 FLAX 服务已不可达（直连与代理均 000），BAWE 学术书面语料暂无公开查询入口
 - **SkELL**：无公开稳定 API（端点返回空查询壳），语料定位（学术+新闻+维基混合）与 Linggle 重叠，不引入
+- **Europe PMC**：免费无 key，但 REST 查询对功能词组合同样退化——默认查询与 Lucene `ABSTRACT:"..."` 字段限定均同值（the data is/are 均 6,382,700；research on/of 均 2,867,858，2026-09-20 实测）
+- **Crossref**：`query.bibliographic` 为模糊词袋，无短语与 AND 语义（乱词对照组 xyzzy plugh quux nonsense 仍返回 8,862 条），不可用于搭配对比
+- **Bing**：`sb_count` 结果数可 curl 解析（About N results），但双引号短语语义不执行——实测 under the background of site:edu 反超 in the context of site:edu（8 倍）、do research 反超 conduct research（27 倍），均与学术语料真实方向相反；量级数字会误导，禁用作搭配频次证据
+- **DuckDuckGo HTML 版 / Mojeek**：前者返回 challenge 空页（0 条结果），后者 403，均不可用
+- **总规律（2026-09-20 实测）**：含介词/冠词/be 动词的学术短语「真短语查询」目前仅 PubMed esearch 一家（`"短语"[Abstract]`，the data is 2 篇 vs the data are 7,628,735 篇）；OpenAlex/arXiv/Europe PMC/Crossref 及全部测试过的网页搜索引擎在该场景全部退化或失真
+
+## 浏览器型学术辅助源（JS 界面，浏览器工具专用）
+
+- **Academic Phrasebank**（曼彻斯特大学，phrasebank.manchester.ac.uk）：按修辞功能组织的学术短语库（introducing work / describing methods / reporting results / discussing findings / writing conclusions / referring to sources 六板块），回答「论文某个部分该用什么句式」。不是频次语料，是人工筛选惯例集，适合写作教学与初稿搭建，与频次查证互补
+- **MICUSP / MICASE**（密歇根大学，micusp.elicorpora.info / micase.elicorpora.info）：学生高年级论文语料（830 篇，含 A-C 成绩等级标注，可对比优等生与及格生的写法差异）/ 学术口语语料。JS 查询界面，curl 只拿应用壳，浏览器专用，低频场景
 
 ## code_exec 提取代码模式（Node，无第三方依赖）
 

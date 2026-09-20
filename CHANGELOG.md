@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.4.2（2026-09-20）
+
+第二族学术源实测（文献 API 扩展族 + 网页搜索引擎族），排雷记录：
+
+- **Europe PMC**：REST 与 Lucene `ABSTRACT:"..."` 字段限定对功能词组合均退化（同值）
+- **Crossref**：`query.bibliographic` 模糊词袋（乱词对照组返回 8,862 条），无短语语义
+- **Bing**：结果数可解析但双引号短语不执行，实测两组方向与学术语料相反，禁用作搭配频次证据
+- **DDG HTML 版**（challenge 空页）、**Mojeek**（403）不可用
+- **总规律**：含功能词的学术短语真短语查询目前仅 PubMed esearch 一家可用
+- 新增浏览器型辅助源记录：Academic Phrasebank（修辞功能短语库）、MICUSP/MICASE（学生论文/学术口语）
+
 ## 1.4.1（2026-09-20）
 
 学术源实测修正（四案例端到端测试发现）：
