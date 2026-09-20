@@ -200,7 +200,7 @@ curl 返回 200 但为 JS 壳（实测无 h3 标题无结果链接），必须�
 - **Crossref**：`query.bibliographic` 为模糊词袋，无短语与 AND 语义（乱词对照组 xyzzy plugh quux nonsense 仍返回 8,862 条），不可用于搭配对比
 - **Bing**：`sb_count` 结果数可 curl 解析（About N results），但双引号短语语义不执行——实测 under the background of site:edu 反超 in the context of site:edu（8 倍）、do research 反超 conduct research（27 倍），均与学术语料真实方向相反；量级数字会误导，禁用作搭配频次证据
 - **DuckDuckGo HTML 版 / Mojeek**：前者返回 challenge 空页（0 条结果），后者 403，均不可用
-- **总规律（2026-09-20 实测）**：含介词/冠词/be 动词的学术短语「真短语查询」目前仅 PubMed esearch 一家（`"短语"[Abstract]`，the data is 2 篇 vs the data are 7,628,735 篇）；OpenAlex/arXiv/Europe PMC/Crossref 及全部测试过的网页搜索引擎在该场景全部退化或失真
+- **总规律（2026-09-20 实测，含字段限定变体复测）**：含介词/冠词/be 动词的学术短语「真短语查询」目前仅 PubMed esearch 一家（`"短语"[Abstract]`，the data is 2 篇 vs the data are 7,628,735 篇）。字段限定与语法变体复测全部无效——arXiv `abs:"..."`/`ti:"..."` 同值（654,693 / 83,498）、Europe PMC `TITLE:"..."` 同值（421,111）、OpenAlex `filter=title.search:"..."` 同值（4,765,551）。**退化发生在索引层**（分词器建索引时丢弃停用词，无位置索引），查询语法无解，不要再尝试变体。PubMed 幸存是因为其索引保留了停用词位置信息。潜在攻克方向（未验证）：CORE API（3400 万 OA 全文，Elasticsearch 底层，需免费注册 key）若分词器保留停用词位置索引，即为全学科版 PubMed
 
 ## 浏览器型学术辅助源（JS 界面，浏览器工具专用）
 
