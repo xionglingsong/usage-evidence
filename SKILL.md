@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.4.0
+version: 1.4.1
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -52,7 +52,7 @@ metadata:
 - **浏览器工具**：Oxford 的短语与习语查询（curl 的 ?q= 参数无效，用站内搜索框跳到主干词条的 Idioms 板块）；牛津 curl 返回 0 字节时（短时限流，非指纹检测）也切浏览器。详见 sources.md
 - **介词查证的冠词绑定技巧**：查 X 后接什么介词时，Linggle 分别查 `the X _` 和 `a/an X _`——冠词会锁定介词（实测 the introduction 后 87.5% 是 of，an introduction 后 77.7% 是 to，两组分布截然不同）。介词与冠词是绑定组，分开查才准
 - **被挡降级**：Collins、Merriam-Webster、Ludwig 被 Cloudflare 挡自动化访问 → Ludwig 的功能由 Linggle（填空/对比）+ Linguee（权威例句）+ FreeDictionary（Webster's/AHD/Collins 内容）覆盖
-- **学术语域查证（I 类）**：OpenAlex 短语计数（约 2.5 亿文献的 title+abstract，免费无 key）+ `group_by=publication_year` 学术历时趋势；学科条件化用 concepts 过滤（先查 concepts id 再 filter）。生医语境加 PubMed esearch 计数，理工语境加 arXiv（https，读 totalResults）。Google 精确短语 + `site:edu` / `site:edu.cn` 做语域量级对比（**浏览器专用**，curl 是 JS 壳；结果数为估算只做同参数对比；`*` 通配不响应，通配用 Linggle `_`）。学术源数字表述为「X 篇文献出现」，与通用语料的「N 次」分开；学科证据与通用证据冲突时，学术写作语境以学科源优先
+- **学术语域查证（I 类）**：OpenAlex 短语计数（约 2.5 亿文献的 title+abstract，免费无 key）+ `group_by=publication_year` 学术历时趋势；学科条件化用 concepts 过滤（先查 concepts id 再 filter）。生医语境加 PubMed esearch 计数，理工语境加 arXiv（https，读 totalResults）。Google 精确短语 + `site:edu` / `site:edu.cn` 做语域量级对比（**浏览器专用**，curl 是 JS 壳；结果数为估算只做同参数对比；`*` 通配不响应，通配用 Linggle `_`）。**OpenAlex 短语匹配只对实词组合可靠**，含介词/冠词/be 动词的组合静默退化为词袋（两候选计数完全相同即退化信号，禁用该组数字），降级走 PubMed `[Abstract]` 真短语查询（arXiv 对功能词组合同样退化）。学术源数字表述为「X 篇文献出现」，与通用语料的「N 次」分开；学科证据与通用证据冲突时，学术写作语境以学科源优先
 - **Ngram 定量对比**：`node scripts/ngram.mjs "phrase A,phrase B"`，自动输出近年均值、峰值年份、趋势和相对倍数。用户文章是英式或美式时加 `--corpus en-GB-2019` / `--corpus en-US-2019` 分库查证；未说明变体时用默认 en-2019 总库，若该搭配在两库频率差异显著，分别报告并在结论里标注地区归属
 - **语义韵敏感词主动查**：commit、cause、pose、suffer、set in、happen、undergo、inflict、perpetrate、endure 、bring about（积极韵，与 cause 相对）、rife、budge 等词天生带氛围倾向，词典无此标签，且**对母语者直觉也是隐形的，系统语料分析是唯一检测途径**（Liu, 2020; Jurko, 2021）。用户问"哪里怪/语法对但感觉不对"，或建议中涉及这些词时，Linggle 查 `动词 + 冠词 + _`（如 commit a _）或 `动词 + _`，把返回伙伴按语义类别归类（消极/积极/中性/仅技术语境），伙伴分布即语义韵的直接证据；再用 Ngram 对比可疑搭配 vs 常规搭配交叉验证（如 commit an achievement vs achieve an achievement）。**注意语域条件化**：同一词在不同语域可呈现相反极性（如 erupted 在体育新闻偏积极、硬新闻偏消极，Nelson, 2005），用户语境有明显语域特征时在结论中注明
 

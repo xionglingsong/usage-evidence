@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.1（2026-09-20）
+
+学术源实测修正（四案例端到端测试发现）：
+
+- **OpenAlex 短语匹配的退化条件**：双引号短语只对实词组合可靠（do research vs conduct research 区分清晰）；含介词/冠词/be 动词的组合静默退化为词袋，特征是两个候选返回完全相同的计数（research on/of 与 the data is/are 实测均同值），加长短语也不恢复。同值即禁用该组数字
+- **降级链**：功能词组合的学术短语查证走 PubMed `[Abstract]` 真短语查询（实测 the data is 2 篇 vs the data are 7,628,735 篇）；arXiv `all:` 与 OpenAlex 三种 search 参数（search= / title_and_abstract.search / fulltext.search）对功能词组合全部退化
+
 ## 1.4.0（2026-09-20）
 
 新增 I 类学术语域查证（回应通用语料查不了学科惯例的边界局限，Flowerdew & Petrić, 2024）：

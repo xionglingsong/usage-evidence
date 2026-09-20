@@ -164,6 +164,7 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
 学术版 Ngram + 学科条件化查证的核心源。免费无 key，直连，建议带 `&mailto=` 参数提高礼貌限额。
 
 - **短语计数**（检索范围 title+abstract，部分含全文）：`https://api.openalex.org/works?search=%22短语URL编码%22&per-page=1` → 读 `meta.count`。两个候选写法分别计数，即学科语料内的相对频率对比
+- **退化警告（2026-09-20 实测）**：双引号短语匹配只对**实词组合**可靠（do research 208K vs conduct research 715K 区分清晰）。含介词/冠词/be 动词等**功能词**的组合会静默退化为词袋匹配，特征是两个候选返回**完全相同的计数**（research on/of 均返回 26,172,210；the data is/are 均返回 60,291,134；加长到 4 词也不恢复）。判据：候选计数相同 = 退化信号，此时**禁用该组数字**（会误导为「两者同等常用」），降级走 PubMed `[Abstract]` 精确短语（真 Lucene phrase query，实测 the data is 仅 2 篇 vs the data are 7,628,735 篇，区分度极高；语料偏生医，非生医语境引用时注明）。`filter=title_and_abstract.search:` 与 `filter=fulltext.search:` 同样退化；arXiv `all:` 对功能词组合同样退化（the data is/are 均返回 702,623）
 - **学术历时趋势**：加 `&group_by=publication_year` → `group_by[0]` 数组各年 bucket（`key_display_name` 年份 + `count` 篇数）。可与 Google Ngram 通用趋势对照，回答「这个学术用法在涨还是退」
 - **学科条件化**（= Google `site:` 的 API 版）：先 `https://api.openalex.org/concepts?search=学科名` 拿 `id`，再 `&filter=concepts.id:Cxxxxxxx` 限定学科内计数
 - **给用户的锚链接**（web 版可浏览）：`https://openalex.org/works?search=%22短语%22`
