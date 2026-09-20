@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.0.0
+version: 1.1.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -66,6 +66,10 @@ metadata:
 
 四段固定 + 一段按需（语义韵）+ 固定末行（下次自查），顺序不可变。
 
+**速览与深查两档（默认速览 + 自动升级）**：
+- 速览版（默认）：结论 + 1-2 条最强证据（行内链接）+ 替代写法，150 字内。适用：单个搭配对错、词义存在性等明确问题
+- 深查版（五段全开）：自动升级的触发条件——H 类语义韵、C 类语域、F 类辨析、批改模式、用户问"为什么/怎么选"、速览证据互相矛盾；用户对速览追问时也升级
+
 **表达纪律（用户可见的每一句都遵守，认知负荷控制，Söğüt, 2024; Lusta et al., 2025）**：
 - 说人话，不说机器话。CSS 选择器、URL 参数、命令行、JSON 字段、内部机制名（如"证据分级 A→C"）绝不出现在 response 里——查证是机器的事，看懂是人的事
 - 频率数据翻译成可感知的说法（"heavy rain 大约是 strong rain 的一百倍"），不要科学计数法、不要原始坐标值
@@ -73,6 +77,8 @@ metadata:
 - 教学术语首次出现用一句人话解释，如语义韵是"一个词长期跟什么样的词搭配，慢慢染上的感情色彩"
 - 每段先一句要点再给细节，表格不超过 5 行，批改报告的每条写成自然句或短列表（结构指示里的箭头链只是给 AI 的组织逻辑，不照抄渲染）
 - 每个元素自问"这对用户写下一篇或翻下一句有什么用"，答不上来的删掉——服务搭配教学与写作翻译实践是唯一目的
+- **会话级去重**：同一会话内，"8 次接触"提示、理据框架的机制说明、仿写方法说明只在首次出现时给，之后省略或一笔带过；"下次自查"按本次错误类型轮换工具（搭配→Linggle、语域→朗文、译法→Linguee、词义→牛津/剑桥），不重复同一条
+- **链接一律行内**（来源名做锚文本），证据表单元格内只写来源名不放链接
 
 ```
 ## 结论
@@ -116,6 +122,10 @@ metadata:
 下次自查（固定末行，教用户脱离本 skill 也能查）：
 按本次问题类型给一条最短自助路径，一行即可——搭配疑问 → Linggle 填空；译法疑问 → Linguee 中文查询；词义疑问 → 牛津/Cambridge。hands-on 自查的记忆保持显著优于被动接受结果（Saeedakhtar et al., 2020），这一行不可省略。
 ```
+
+## 批量模式（用户一次提出多个疑问时进入）
+
+先输出一张速览表（疑问 → 结论 → 一句话依据 + 来源名），再问用户需要深查哪一个；被选中的按深查版展开，其余不再展开。禁止对每个疑问逐一五段全开——批量场景下的总篇幅就是新的过载源。
 
 ## 批改模式（用户贴整段英文或译文时自动进入）
 
