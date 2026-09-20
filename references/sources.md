@@ -4,7 +4,7 @@
 
 | 源 | 访问方式 | 实测状态 |
 |---|---|---|
-| Oxford Learner's | 浏览器工具 | curl 返回空体（TLS 指纹检测），浏览器完全正常 |
+| Oxford Learner's | curl 直连（浏览器备用） | OK，2026-09-20 双端复核通过（此前 0 字节为短时限流，非指纹检测） |
 | Cambridge | curl 直连 | OK，HTML 结构最规整 |
 | Longman LDOCE | curl 直连 | OK |
 | Etymonline | curl 直连 | OK |
@@ -13,7 +13,7 @@
 | TheFreeDictionary | curl + 代理 | OK |
 | Google Ngram JSON | curl + 代理 | OK，有 JSON API |
 | Thesaurus.com | curl + 代理 | OK |
-| Linggle | 浏览器工具 | OK（SPA 前端应用，curl 拿不到数据） |
+| Linggle | curl 直连（JSON API） | OK，`/api/ngram/` 路径传参返回 JSON（2026-09-20 workbuddy 实验发现，本地复核通过） |
 | Collins | 不可用 | Cloudflare 挡 curl 和浏览器 |
 | Merriam-Webster | 不可用 | Cloudflare Turnstile 连浏览器都过不去 |
 | Ludwig | 不可用 | Cloudflare Turnstile，浏览器验证也过不去 |
@@ -32,6 +32,7 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
   - 英式：`https://www.oxfordlearnersdictionaries.com/definition/english/{word}`
   - 美式：`/definition/american_english/{word}`
   - 单词会自动 301 到 `{word}_1`/`{word}_2`（按词性分条目），直接访问不带编号的 URL 即可
+- **curl 直连可用**（2026-09-20 复核：带 Chrome UA 返回 200 + 完整 HTML 约 84KB，释义/搭配式/例句选择器解析正常；2026-09-19 曾遇连续 0 字节，当时误判为 TLS 指纹检测，实为短时限流——遇 0 字节稍候重试或切浏览器）
 - **短语/习语不能猜 URL slug**（如 `be-raining-cats-and-dogs` 会 404）。正确姿势用搜索框：
   1. `browser_navigate` 打开任一词条页
   2. `browser_type` 在 "Enter search text" 输入框填入短语
@@ -115,8 +116,12 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
 
 ## 10. Linggle（搭配发现 + 频率排序，浏览器路径）
 
-- URL：`https://search.linggle.com/?q={query}`（词间用 `+`，通配符原样放，如 `play+a+role+_`）
-- **SPA 前端应用：curl 只能拿到 2KB 壳，必须用浏览器**（browser_navigate 直达 URL，快照即出结果表）
+- **JSON API（首选，curl 直连）**：`GET https://search.linggle.com/api/ngram/{urlencode(查询式)}`，空格编码为 `%20`，如 `https://search.linggle.com/api/ngram/the%20introduction%20_`
+  - 返回 `{"query":..., "ngrams":[["短语", 次数], ...]}`，按频次降序，直接解析 JSON
+  - **必须路径传参：`?q=` 形式会 301 到空结果**（实测陷阱）
+  - 例句接口：`POST /api/example/`
+  - 查询式语法在 API 中同样有效：`_` 任意一词、`*` 0+ 词、`?` 可选词、`v./n./adj./prep.` 词性标签
+- 网页版（备用，适合人看分布表）：`https://search.linggle.com/?q={query}`，SPA 需浏览器渲染，curl 只拿到壳
 - 结果表格（Phrases / % / Count）快照可直接读，自带百分比和频次
 - 查询语法（台湾清华 NLPLab 学术语料，2026-09-19 实测全部有效）：
   - `_` 匹配任意一个词：`play a role _` → play a role in（89.9%，76 万次）/ as（2%）/ of（1%）…

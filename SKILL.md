@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.1.0
+version: 1.2.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -25,7 +25,7 @@ metadata:
 
 ## 版本自查（每次查证任务开始时做一次，同一会话不重复）
 
-拉取 `https://raw.githubusercontent.com/xionglingsong/usage-evidence/main/SKILL.md` 的 frontmatter version 字段，与本地比对。落后则在回复末尾轻提一句，如"本 skill 有新版本 v1.1.0，在安装目录运行 git pull 即可更新"。拉取失败或网络不通就静默跳过，**绝不阻塞查证本身**，也不向用户抱怨网络问题。
+拉取 `https://raw.githubusercontent.com/xionglingsong/usage-evidence/main/SKILL.md` 的 frontmatter version 字段，与本地比对。落后则在回复末尾轻提一句，如"本 skill 有新版本 v1.1.0，在安装目录运行 git pull 即可更新"。版本一致时不提及自查这件事；拉取失败或网络不通就静默跳过，**绝不阻塞查证本身**，也不向用户抱怨网络问题。
 
 ## 工作流
 
@@ -46,9 +46,10 @@ metadata:
 
 ### 第二步：查证（各源 URL 模板、选择器、访问方式详见 references/sources.md）
 
-- **curl 直连**：Cambridge、Longman、Etymonline、Linguee —— 在 code_exec 里拉取后按选择器提取
+- **curl 直连**：Cambridge、Longman、Etymonline、Linguee、Oxford（单词词条，2026-09-20 复核通过）、Linggle（JSON API：`search.linggle.com/api/ngram/{urlencoded 查询式}`，**路径传参，?q= 会 301 到空结果**）—— 在 code_exec 里拉取后按选择器或 JSON 解析
 - **curl + 代理**：UrbanDictionary、FreeDictionary、Ngram、Thesaurus —— 先 `export https_proxy=<你的代理地址>（示例 http://127.0.0.1:7890 为 Clash 默认端口）`
-- **浏览器工具**：Oxford（curl 被 TLS 指纹检测挡返回空，浏览器完全正常；短语/习语用搜索框查）；Linggle（SPA，curl 只拿到壳，浏览器直达 `https://search.linggle.com/?q={query}`）。详见 sources.md
+- **浏览器工具**：Oxford 的短语与习语查询（curl 的 ?q= 参数无效，用站内搜索框跳到主干词条的 Idioms 板块）；牛津 curl 返回 0 字节时（短时限流，非指纹检测）也切浏览器。详见 sources.md
+- **介词查证的冠词绑定技巧**：查 X 后接什么介词时，Linggle 分别查 `the X _` 和 `a/an X _`——冠词会锁定介词（实测 the introduction 后 87.5% 是 of，an introduction 后 77.7% 是 to，两组分布截然不同）。介词与冠词是绑定组，分开查才准
 - **被挡降级**：Collins、Merriam-Webster、Ludwig 被 Cloudflare 挡自动化访问 → Ludwig 的功能由 Linggle（填空/对比）+ Linguee（权威例句）+ FreeDictionary（Webster's/AHD/Collins 内容）覆盖
 - **Ngram 定量对比**：`node scripts/ngram.mjs "phrase A,phrase B"`，自动输出近年均值、峰值年份、趋势和相对倍数。用户文章是英式或美式时加 `--corpus en-GB-2019` / `--corpus en-US-2019` 分库查证；未说明变体时用默认 en-2019 总库，若该搭配在两库频率差异显著，分别报告并在结论里标注地区归属
 - **语义韵敏感词主动查**：commit、cause、pose、suffer、set in、happen、undergo、inflict、perpetrate、endure 、bring about（积极韵，与 cause 相对）、rife、budge 等词天生带氛围倾向，词典无此标签，且**对母语者直觉也是隐形的，系统语料分析是唯一检测途径**（Liu, 2020; Jurko, 2021）。用户问"哪里怪/语法对但感觉不对"，或建议中涉及这些词时，Linggle 查 `动词 + 冠词 + _`（如 commit a _）或 `动词 + _`，把返回伙伴按语义类别归类（消极/积极/中性/仅技术语境），伙伴分布即语义韵的直接证据；再用 Ngram 对比可疑搭配 vs 常规搭配交叉验证（如 commit an achievement vs achieve an achievement）。**注意语域条件化**：同一词在不同语域可呈现相反极性（如 erupted 在体育新闻偏积极、硬新闻偏消极，Nelson, 2005），用户语境有明显语域特征时在结论中注明
