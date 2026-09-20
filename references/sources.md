@@ -124,7 +124,7 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
   - `?` 可选词：`listen ?to music` → 对比 listen to music vs listen music 哪个常用
   - 词性标签：`adj. dinner`（dinner 前的形容词）、`v. war`、`n.`、`prep.` 等
 - 与 Ngram 分工：**Ngram 验证**"想到的两个短语哪个常用"；**Linggle 发现**"这个位置上常用什么词"。填空类问题 Linggle 一步到位
-- 语义韵查证用法（2026-09-19 实测 commit a _）：查 `动词 + 冠词 + _` 或 `动词 + _`，把返回搭配伙伴按语义类别归类（消极/积极/中性/仅技术语境），伙伴分布即语义韵证据——commit a _ 前 51 伙伴全是 crime 39.8% / felony 9.3% / sin 3.2% / murder 2.7% / fraud / robbery 一族，加 transaction / file 等技术语境，零积极词。词典无语义韵标签，此法是唯一可查证路径
+- 语义韵查证用法（2026-09-19 实测 commit a _）：查 `动词 + 冠词 + _` 或 `动词 + _`，把返回搭配伙伴按语义类别归类（消极/积极/中性/仅技术语境），伙伴分布即语义韵证据——commit a _ 前 51 伙伴全是 crime 39.8% / felony 9.3% / sin 3.2% / murder 2.7% / fraud / robbery 一族，加 transaction / file 等技术语境，零积极词。词典无语义韵标签，此法是唯一可查证路径。**释义限定语线索**（2026-09-20 实测 cause）：少数敏感词的韵直接写在释义里——剑桥 cause 名词释义原话 "the reason why something, especially something bad, happens"，especially something bad 就是韵。查敏感词时先扫释义中的 especially / mostly / usually + 评价性形容词，再上 Linggle 伙伴分布验证，两路证据互证
 - 输出的百分比/频次可直接引用为 B 级证据（语料高频）
 
 ## 11. Ludwig（当前被挡）
