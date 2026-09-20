@@ -4,6 +4,10 @@
 
 这是一个 evidence-based 的英语用法查证 skill。你问"这个搭配能不能这样写"，AI 不再凭语感回答，而是先去查牛津、剑桥、朗文、Linguee、Google Ngram，把查到的原话证据摆在你面前，再下结论。
 
+<p align="center"><video src="promo/usage-evidence-v1-promo.mp4" controls="controls" muted="muted" width="800"></video></p>
+
+<p align="center"><sub>52 秒宣传片 · 用归藏 product video skill 制作 · 配乐为代码原创</sub></p>
+
 开源地址就是你现在看到的仓库。下面是这个 skill 的来龙去脉。
 
 ## 故事从一个念头开始
