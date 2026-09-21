@@ -83,6 +83,10 @@
 - "接受采访"直译 accepted an interview——Linggle 语料里 an interview 前 51 个高频动词中没有 accept，英语里受访者是把采访"给"出去的（give / grant an interview）
 - 学术写作想用 main aim 还是 primary aim——Linggle 直接给出分布，main 56.5%，primary 12%，principal 7.6%
 
+## 批改样例
+
+一份完整的学术摘要批改输出（教师版三件套，全部证据可点击回溯）见 [examples/academic-proofread-sample.md](examples/academic-proofread-sample.md)。
+
 ## 安装
 
 适用于任何支持 SKILL.md 格式的 Agent 环境（Ekko、Claude Code 等）。
