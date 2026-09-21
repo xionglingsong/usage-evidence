@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.9.0
+version: 1.9.1
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -176,7 +176,7 @@ metadata:
    - **全面模式**：用户明示「全部详纠」或全段错误总数 ≤ 4 条时切换（错误少时聚焦无意义）；此模式沿用按严重度详列，超过 8 条时详列前 8、其余进分布表
 5. **输出批改报告**，按原文顺序：
    - 原句片段 → 结论（✅/⚠️/❌）→ 一句话原话依据 + 来源 → 修改建议
-   - **聚焦模式下每个实例附「先自己改」邀请**：给原句与错误类型提示（不给答案），学生先改再回复编号对答案——间接反馈配修订放大习得（Rahimi, 2019; Frear & Chiu, 2015），对答案时才展开完整证据链
+   - **聚焦模式下每个实例附「带工具的自查修订」邀请**（辅助型间接反馈，勿降级为空手改）：给原句 + 错误类型 + **一条具体查询路径**（如「用 Linggle 查 `v. + research` 看动词分布，search.linggle.com」「查牛津 research 词条的词性标注」），学生带着工具改，改完回复编号对答案。依据：标记 + 语料查询的辅助间接反馈在短期与延迟测试中均反超直接反馈（Li, 2023，16 周 DDL 整合实验，且优于传统词典；Reynolds & Teng, 2021; Wang & Jiang, 2015）；修订放大习得（Rahimi, 2019）。**强制兜底行**：每个邀请同段固定一句「不想自查，直接回复编号看证据和答案」——搭配是非规则组合，无辅助间接对低水平学习者失败（Fhaeizdhyall & Jerome, 2020；低水平组延迟后测不保），自助永远可选、永不强迫；对答案环节给完整证据链 + 目标形式（直接反馈对搭配的即时与保持优势，Fhaeizdhyall, 2020; Reynolds & Teng, 2021）
 6. **末尾汇总**：本次错误类型分布 + 下次自查一行 + 固定一行「想深究哪一条，回复编号」——对话式交付优于被动标记（Sarré et al., 2019）
 
 **学术文本批改的增强版式**（用户贴的是论文摘要/引言/文献综述/结论，或明示学术语境时启用；jev 评估 teacher 场景就绪度 0.34 的针对性补强，目标是产出教师可直接转发学生的成品）：
