@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.14.2
+version: 1.15.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -18,7 +18,7 @@ metadata:
 
 ## 核心纪律
 
-1. **每个结论必须有出处，证据必须逐字引用原话**。判断"能用/不能用/更佳"时至少附一条真实证据，且证据必须是查证页面的原文——词典释义原文、例句原文、平行句原文、频率数字，原样引用并标注来源（词典/语料库名 + 词条或查询式）。禁止把 AI 的转述、概括、改写当作证据。查到什么引用什么，不虚构释义和例句。**每处出处（含证据表每一行的出处列）必须写成可点击的 Markdown 超链接** `[来源名](URL)`，URL 用当次查证的真实地址按第四步锚链接速查表构造。发送前逐行自检证据表：任何一行出处是纯文字，先补链接再发——无链接不可回溯即不合格输出。
+1. **每个结论必须有出处，证据必须逐字引用原话**。判断"能用/不能用/更佳"时至少附一条真实证据，且证据必须是查证页面的原文——词典释义原文、例句原文、平行句原文、频率数字，原样引用并标注来源（词典/语料库名 + 词条或查询式）。禁止把 AI 的转述、概括、改写当作证据。查到什么引用什么，不虚构释义和例句。**证据形态平衡（2026-09-20 六篇真实文本实测教训：频率数字用顺手后，词典原话会整体缺席）**——频率计数只是四种证据形态之一，各查证类型有必需形态：词义歧义/存在性判断（如 the East 指亚洲还是某国东部）必须附词典释义原话实锤（剑桥 east 词条 the East 义项原文只有 Asia 与前共产主义东欧两义，「中国东部」义项不存在——这种证据比任何 AI 判断都有力）；搭配对错优先频率+Ngram 但有词典搭配板块时引用；语域判断引词典语域标注；纯频率对比（A 比 B 常用）才允许纯数字证据。批改报告发送前自检：如果全文证据只有数字没有任何一条词典或例句原话，回查词典路线补原话再发**每处出处（含证据表每一行的出处列）必须写成可点击的 Markdown 超链接** `[来源名](URL)`，URL 用当次查证的真实地址按第四步锚链接速查表构造。发送前逐行自检证据表：任何一行出处是纯文字，先补链接再发——无链接不可回溯即不合格输出。
 2. **查不到 ≠ 不存在**。某词典未收录只能表述为"该词典未收录"；判"不建议使用"需两路反证（词典未收录 + Ngram 频率≈0）。
 3. **事实与推断分开**。频率数字、词典释义、来源例句是事实；"更自然/更地道"是推断，须写明依据（如"A 频率是 B 的 40 倍"）。**频率差异三档制**（母语者内部变异大，静态频率是不稳定基线，Shadrova et al., 2021）——数量级差（≥10 倍）才下方向性硬结论；3-10 倍给倾向性表述（"首选 X，Y 也常见"）；<3 倍不下优劣结论，说"两者并存，选择看语境与语域"，此时词典释义差异或例句语境才是决定证据。禁止把 3 倍级的差异说成"绝对主流"
 4. **网络失败如实报告**（哪些源查不了），不降级为凭感觉回答。
@@ -103,7 +103,7 @@ metadata:
 | 来源 | 锚链接模板 |
 |---|---|
 | OALD | `https://www.oxfordlearnersdictionaries.com/definition/english/{词条}`（词条带序号如 rain_1，用实际访问到的地址） |
-| Cambridge | `https://dictionary.cambridge.org/dictionary/english/{词条}` |
+| Cambridge | `https://dictionary.cambridge.org/dictionary/english/{词条}`（词条内常带 Grammar 辨析链接如 East or eastern，词义歧义类问题的原话佐证首选） |
 | LDOCE | `https://www.ldoceonline.com/dictionary/{词条}` |
 | Linguee | `https://www.linguee.com/english-chinese/search?query={URL编码查询词}` |
 | Linggle | `https://search.linggle.com/?q={URL编码查询式}` |
