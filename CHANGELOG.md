@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.14.2（2026-09-20）
+
+真实文本 002（认知神经科学摘要）的两项落地：
+
+- **标记清单新增「名词化结构混乱」**：两个标准框架杂交的子类（the modulation of A on B = modulation of B by A 与 effect of A on B 各取一半），判断法（倒读名词化链问作用方向）+ 三路证据流程（OpenAlex 正确结构对照 / Ngram 杂交结构近零 / 同义标准结构频率）。实测锚点：modulation of attention on 图书语料近零 vs effect of attention on 2 万篇、modulation of performance by 3,173 篇
+- **确认模式链接纪律澄清**：人话版式不豁免 v1.5.0 链接验收——数字证据的链接行内嵌入自然句，发送前逐行自检（实测教训：确认模式易把「说人话」误执行为「放弃链接」）
+- 顺带确认：摘要学科期望表硬科学首战通过（方法详尽、直接结论、无 implications 软结尾，未被社科期望误伤）
+
 ## 1.14.1（2026-09-20）
 
 方向四第二批文献落地（中国 EFL 错误分类学与纵向发展，用户 Consensus 检索）：
