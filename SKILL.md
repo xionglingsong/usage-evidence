@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.4.3
+version: 1.5.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -18,7 +18,7 @@ metadata:
 
 ## 核心纪律
 
-1. **每个结论必须有出处，证据必须逐字引用原话**。判断"能用/不能用/更佳"时至少附一条真实证据，且证据必须是查证页面的原文——词典释义原文、例句原文、平行句原文、频率数字，原样引用并标注来源（词典/语料库名 + 词条或查询式）。禁止把 AI 的转述、概括、改写当作证据。查到什么引用什么，不虚构释义和例句。
+1. **每个结论必须有出处，证据必须逐字引用原话**。判断"能用/不能用/更佳"时至少附一条真实证据，且证据必须是查证页面的原文——词典释义原文、例句原文、平行句原文、频率数字，原样引用并标注来源（词典/语料库名 + 词条或查询式）。禁止把 AI 的转述、概括、改写当作证据。查到什么引用什么，不虚构释义和例句。**每处出处（含证据表每一行的出处列）必须写成可点击的 Markdown 超链接** `[来源名](URL)`，URL 用当次查证的真实地址按第四步锚链接速查表构造。发送前逐行自检证据表：任何一行出处是纯文字，先补链接再发——无链接不可回溯即不合格输出。
 2. **查不到 ≠ 不存在**。某词典未收录只能表述为"该词典未收录"；判"不建议使用"需两路反证（词典未收录 + Ngram 频率≈0）。
 3. **事实与推断分开**。频率数字、词典释义、来源例句是事实；"更自然/更地道"是推断，须写明依据（如"A 频率是 B 的 40 倍"）。
 4. **网络失败如实报告**（哪些源查不了），不降级为凭感觉回答。
@@ -96,6 +96,27 @@ metadata:
 | "所有接受采访者做出了匿名的承诺" ↔ "All respondents have been promised anonymity" | [Linguee 平行句（daccess-ods.un.org）](https://www.linguee.com/english-chinese/search?query=promised+anonymity) |
 
 文本类证据用引号逐字引用，不改写、不缩写、不"翻译成自己的话"；频率类原样给数字与百分比；双语平行句两侧都引。**每条证据附可溯源的真实链接**（Markdown 格式，来源名做锚文本——表格出处列同样如此），用户点开出处即可核对——把"信任本 skill"变成"可验证"（批判性使用证据，Liu et al., 2024）。链接纪律：按 references/sources.md 的 URL 模板构造或用实际访问地址，**禁止编造 URL**；Ngram 附可视化页面（如 books.google.com/ngrams/graph?content=heavy+rain,strong+rain&year_start=1900&year_end=2019&corpus=en-2019），不是数据接口；牛津附最终词条页（如 oxfordlearnersdictionaries.com/definition/english/rain_1），不是搜索过程页；Linggle 附查询式 URL（如 search.linggle.com/?q=commit+a+_），用户点开即见完整分布。**精选 3-5 条最强证据，按 A→C 分级排序，A 级优先**——DDL 研究证实海量语料罗列会引发读者过载与误读（Söğüt, 2024; Farooqui, 2025），宁精勿滥。查不到原话的源如实标注"该源未返回可用原文"。
+
+**来源锚链接速查表**（出处列照此构造，花括号为占位符，查询词需 URL 编码）：
+
+| 来源 | 锚链接模板 |
+|---|---|
+| OALD | `https://www.oxfordlearnersdictionaries.com/definition/english/{词条}`（词条带序号如 rain_1，用实际访问到的地址） |
+| Cambridge | `https://dictionary.cambridge.org/dictionary/english/{词条}` |
+| LDOCE | `https://www.ldoceonline.com/dictionary/{词条}` |
+| Linguee | `https://www.linguee.com/english-chinese/search?query={URL编码查询词}` |
+| Linggle | `https://search.linggle.com/?q={URL编码查询式}` |
+| Ngram | `https://books.google.com/ngrams/graph?content={短语A,短语B}&year_start=1900&year_end=2019&corpus=en-2019&smoothing=3`（与实际查询参数一致） |
+| Urban Dictionary | `https://www.urbandictionary.com/define.php?term={词条}` |
+| Etymonline | `https://www.etymonline.com/word/{词条}` |
+| TheFreeDictionary | `https://www.thefreedictionary.com/{词条}` |
+| Thesaurus.com | `https://www.thesaurus.com/browse/{词条}` |
+| OpenAlex | `https://openalex.org/works?search={URL编码 "短语"}` |
+| PubMed | `https://pubmed.ncbi.nlm.nih.gov/?term={URL编码 "短语"[Abstract]}` |
+| arXiv | `https://arxiv.org/search/?query={URL编码 "短语"}&searchtype=all` |
+| Google 检索式 | 当次 google.com/search?q=... 完整 URL |
+
+**渲染兜底**：若用户反馈其环境表格内链接不可点击（个别聊天 UI 的表格渲染缺陷），该环境降级为「表内编号 + 表后来源清单」——出处列写 ①②③，表格正下方紧跟清单 `① [OALD rain](URL)`，保证任何环境下来源都可回溯；默认环境仍用表内链接。
 
 ## 语境建议（每条必须指明依据上面哪条原话）
 针对用户当前的句子/语境：
