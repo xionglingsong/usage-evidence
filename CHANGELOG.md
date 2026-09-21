@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.8.0（2026-09-20）
+
+回归防线：新增 scripts/smoke-test.mjs，五项核心不变量自测（改版后运行，防源退化与规则回归）——
+
+- OpenAlex 实词短语区分性（conduct vs do research，>3 倍）
+- OpenAlex 同值退化检测器前提（play a role in/on 同值）
+- PubMed querytranslation 词典命中判读（TBOK 保留引号短语且 count>5 万）
+- Ngram 真短语比例（in/on >100 倍，需代理，无代理自动 SKIP）
+- 版本自查链路（本地与远程 raw SKILL.md 版本一致）
+- 用法：node scripts/smoke-test.mjs --proxy http://127.0.0.1:7890
+
 ## 1.7.1（2026-09-20）
 
 - Ngram 源补网络提示：books.google.com 国内直连被墙（实测 curl exit 28、浏览器 ERR_FAILED），查证与点击锚链接均需代理；无代理打开失败是网络限制非链接损坏，证据以 JSON API 数字为准
