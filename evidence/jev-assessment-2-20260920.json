@@ -1,0 +1,17 @@
+{
+  "model": "jev-1.13.0",
+  "date": "2026-09-20",
+  "purpose": "v1.7.0-v1.8.1 三轮优化后的复评（对照首评 evidence/jev-assessment-2026-09-20.json）",
+  "results": {
+    "academic_maturity": {"score": 2.87, "distribution": {"2": 0.14, "3": 0.85, "4": 0.01}, "confidence": 0.87},
+    "teacher_ready": 0.68,
+    "student_ready": 0.65,
+    "next_priority": {"pick": "real_text_test", "probabilities": {"real_text_test": 0.97, "coca_manual": 0.02, "core_key": 0.01, "release_promotion": 0}, "confidence": 0.97}
+  },
+  "comparison": {
+    "academic_maturity": "2.59 -> 2.87（3档概率 0.61 -> 0.85，置信度 0.66 -> 0.87）",
+    "teacher_ready": "0.34 -> 0.68（教师版三件套+双样例生效）",
+    "student_ready": "0.69 -> 0.65（问题措辞变化，无实质差异）",
+    "next": "batch_academic_proofread(已完成) -> real_text_test(真实学生文本，0.97 置信)"
+  }
+}
