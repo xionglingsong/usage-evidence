@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.9.2
+version: 1.10.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -42,6 +42,7 @@ metadata:
 | G 搭配发现 | "play a role 后面接什么""这里该用哪个介词" | Linggle 填空（`_`/`*`/`?`/词性标签）→ 词典例句 |
 | H 语义韵查证 | "commit success 哪里怪""这个词什么感情色彩""语法对但感觉不对" | Linggle 填空看搭配伙伴分布 → Ngram 交叉验证 → 词典释义 |
 | I 学术语域 | "论文里能这么写吗""学科惯例是什么" | OpenAlex 计数/趋势 → PubMed（生医）/arXiv（理工）→ Google site: 浏览器（低频） |
+| J 引言语步 | "我的引言结构行不行""摘要怎么组织" | 语步巡逻（三语步完整性，尤其 Move 2 缺失）→ Phrasebank 对应板块候选句式 → 语步标志短语学科内频率查证（OpenAlex） |
 
 不要全查 13 个源。词典直接收录（A 级）+ 语料高频（B 级）两条证据齐了即可下结论。
 
@@ -181,7 +182,7 @@ metadata:
 6. **末尾汇总**：本次错误类型分布 + 下次自查一行 + 固定一行「想深究哪一条，回复编号」——对话式交付优于被动标记（Sarré et al., 2019）
 
 **学术文本批改的增强版式**（用户贴的是论文摘要/引言/文献综述/结论，或明示学术语境时启用；jev 评估 teacher 场景就绪度 0.34 的针对性补强，目标是产出教师可直接转发学生的成品）：
-- **批改前置扫描**：先通读全段做三条学术链的专项巡逻——①结论动词链（每个结果句的动词强度 vs 证据类型：prove/demonstrate 只配确定性证据，suggest/indicate 配相关性证据，错配逐条标记）；②引用动词链（文献综述里每个 X argues/claims/states 的态度是否与上下文立场一致，claim 用于中立转述时标记为高风险）；③结论链（future work/research 表达与全文学科惯例的一致性）。巡逻结果并入标记清单一起查证，不单独成段
+- **批改前置扫描**：先通读全段做四条学术链的专项巡逻——①结论动词链（每个结果句的动词强度 vs 证据类型：prove/demonstrate 只配确定性证据，suggest/indicate 配相关性证据，错配逐条标记）；②引用动词链（文献综述里每个 X argues/claims/states 的态度是否与上下文立场一致，claim 用于中立转述时标记为高风险）；③结论链（future work/research 表达与全文学科惯例的一致性）；④引言语步链（仅当文本是引言/摘要时激活，Swales CARS 三语步：Move 1 确立领域 → Move 2 指出缺口 → Move 3 宣告本研究；学生引言最典型的病是 **Move 2 缺失**——没有缺口论证直接宣告本文做了什么，重点标记；判定按功能不按形式，标志短语如 However little research has / remains unclear / to fill this gap / This study aims to 可作 Move 2/3 的形式线索并学科内查频，Lu et al., 2020）。巡逻结果并入标记清单一起查证，不单独成段
 - **报告主体保持通用格式**（原句→结论→证据→建议），但学术文本时每条证据链接优先指向学科源（OpenAlex/PubMed），通用语料证据降为第二位
 - **末尾汇总升级为教师版三件**：①错误类型分布表（全面诊断结果，按学术三项专项 + 通用搭配/语域/语义韵分组计数，学生最常错的排最前）；②本次最值得讲的一个点（与聚焦类的选择一致，配一条最强证据，教师可直接当课堂例句用）；③给学生的下一次自查清单（按本次错误类型轮换 2-3 条可操作动作，如「交稿前把所有 results 后面的动词圈出来，逐个问证据是相关还是因果」），每条动作对应本次报告里的实例编号。教学建议：多篇作业连续批改时，本次聚焦类优先选学生上一篇的高频错误类型（聚焦干预针对持续性错误，Kao et al., 2025）；课堂场景可先让学生两两互标疑点再自查修订，同伴互标先于语料查询可提升错误识别率（Kim & Emeliyanova, 2019）
 - **篇幅纪律不变**：批改模式每点 1-2 条最强证据的限量规则继续生效；反馈模式规则见第 4 步——聚焦模式主体只深纠 1-2 类（全面模式的 8 条护栏仅在其激活时适用），防止报告本身成为新的阅读负担（认知负荷控制，Lusta et al., 2025; Lee, 2019）
@@ -192,4 +193,5 @@ metadata:
 - Ngram 是书籍语料：口语、2019 后新词覆盖弱，新词/网络语用 Urban Dictionary + Linguee 补充
 - **本 skill 强项是用词**——搭配、语域、语义韵、译法。语法准确性不是它的强项（DDL 研究显示语料查询对语法准确性的提升不显著，Kızıl, 2023），用户问语法问题时建议其使用语法检查工具，不要用词典证据硬答语法判断
 - **通用语料的学科局限**：Ngram 总库、Linggle 等通用语料未必反映具体学术领域的惯例、语气与模糊限制语（hedging）用法（Flowerdew & Petrić, 2024）——学科写作查证**优先走 I 类学术源**（OpenAlex 学科过滤 / PubMed / arXiv），通用语料结果与学科源冲突时以学科源为准并分别报告；Linguee 权威来源例句作学科语感的辅助
+- **语步判定是功能判断不是形式判断**（J 类）：AI 判定 CARS 语步有主观性，结论需附「按功能语义判定」的说明；**非线性循环是专家常态**——在文献综述与缺口论证之间来回是合法修辞（Shah, 2025; Msuya, 2020），批改时不得把学生引言硬套线性模板；step 级学科惯例以标志短语的学科内频率为证据（硬科学显式 RQ/假设/被动语态更多，软科学话题概括+穿插综述，Setiawati et al., 2021; Lu et al., 2021），不凭感觉判「不地道」——通用结构模板忽视领域特异惯例正是现有教学材料的已知缺陷（Lu et al., 2021），本 skill 的差异化就在学科条件化
 - 所有源都查不到时明确说"未能查证"，给保守建议（改用更常见表达），不要硬下结论
