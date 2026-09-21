@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.5.1（2026-09-20）
+
+PubMed 三态行为发现与总规律终版（自动测试四案例，querytranslation 字段揭穿）：
+
+- **PubMed 引号短语是三态引擎**：词典命中（可信，如 play a role 178,311 篇）/ 静默词袋（count 虚高假数，如 the data are 763 万实为单词 data 命中、play a role on 80 万实为 play AND role）/ 词典外兜底（垃圾小值，如 the results suggest 返回 2 篇、as far as we know 被解析成作者名 far, as[Author] 返回 0）
+- **判读法**：count 必须配 esearchresult.querytranslation——保留引号短语且量级合理才可用；「数字有区分」不再是可信判据
+- **功能词组合链路定版**：OpenAlex 同值检测 → PubMed（验翻译）→ Ngram 真短语兜底（实测 play a role in 为 on 的 245 倍）
+- 撤回 v1.4.1「降级走 PubMed 即可」的表述与 the data is/are 的 763 万证据（方向碰巧正确，证据坏）
+
 ## 1.5.0（2026-09-20）
 
 出处超链接从模板建议升级为硬性验收标准（用户实测反馈：表格内部分来源仍为纯文字，不可回溯）：

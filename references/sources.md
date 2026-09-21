@@ -169,11 +169,16 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
 - **学科条件化**（= Google `site:` 的 API 版）：先 `https://api.openalex.org/concepts?search=学科名` 拿 `id`，再 `&filter=concepts.id:Cxxxxxxx` 限定学科内计数
 - **给用户的锚链接**（web 版可浏览）：`https://openalex.org/works?search=%22短语%22`
 
-## 15. PubMed E-utilities（生医学科）
+## 15. PubMed E-utilities（生医学科，**三态引擎，数字必须验 querytranslation**）
 
-- **计数**：`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%22短语%22&retmode=json` → `esearchresult.count`
-- 字段限定：`%22短语%22[Title]` 或 `[Abstract]` 可收紧到标题/摘要
+- **计数端点**：`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%22短语%22&retmode=json` → `esearchresult.count`
+- **三态行为（2026-09-20 自动测试发现，比同值退化更阴险）**：PubMed 引号短语依赖 NLM 预构建短语词典，同一条查询随机落入三种状态，count 字段都正常返回、外观看不出异常：
+  1. **词典命中**（可信）：`querytranslation` 保留 `"短语"[All Fields]` 原样，如 "play a role" → 178,311 篇、"to the best of our knowledge" → 57,259 篇，量级合理
+  2. **静默词袋**（虚高假数）：引号被丢弃并展开 MeSH 主题词，如 "the data are" 被翻译成 `"data basel"[Journal] OR ... OR "data"[All Fields]`，763 万篇实为单词 data 的命中；"play a role on" 807,991 篇实为 play AND role 词袋
+  3. **词典外兜底**（垃圾小值）：翻译保留引号但返回 2/5/0 等不可能的小数字，如 "the results suggest" → 2 篇（该短语在医学摘要实为海量）、"as far as we know" → 0 篇（被解析成 `far, as[Author] AND "know"[All Fields]`）
+- **判读法**：每次查询必须读 `esearchresult.querytranslation`——保留引号短语 **且** count 量级合理才可用；出现 OR/AND 布尔扩展即词袋假数，弃用；引号保留但 count ≤ 10 量级可疑，用同短语其他源交叉
 - **锚链接**：`https://pubmed.ncbi.nlm.nih.gov/?term=%22短语%22`
+
 
 ## 16. arXiv API（理工学科）
 
@@ -200,10 +205,7 @@ curl 返回 200 但为 JS 壳（实测无 h3 标题无结果链接），必须�
 - **Crossref**：`query.bibliographic` 为模糊词袋，无短语与 AND 语义（乱词对照组 xyzzy plugh quux nonsense 仍返回 8,862 条），不可用于搭配对比
 - **Bing**：`sb_count` 结果数可 curl 解析（About N results），但双引号短语语义不执行——实测 under the background of site:edu 反超 in the context of site:edu（8 倍）、do research 反超 conduct research（27 倍），均与学术语料真实方向相反；量级数字会误导，禁用作搭配频次证据
 - **DuckDuckGo HTML 版 / Mojeek**：前者返回 challenge 空页（0 条结果），后者 403，均不可用
-- **总规律（2026-09-20 实测，含字段限定变体复测）**：含介词/冠词/be 动词的学术短语「真短语查询」目前仅 PubMed esearch 一家（`"短语"[Abstract]`，the data is 2 篇 vs the data are 7,628,735 篇）。字段限定与语法变体复测全部无效——arXiv `abs:"..."`/`ti:"..."` 同值（654,693 / 83,498）、Europe PMC `TITLE:"..."` 同值（421,111）、OpenAlex `filter=title.search:"..."` 同值（4,765,551）。**退化发生在索引层**（分词器建索引时丢弃停用词，无位置索引），查询语法无解，不要再尝试变体。PubMed 幸存是因为其索引保留了停用词位置信息。潜在攻克方向（未验证）：CORE API（3400 万 OA 全文，Elasticsearch 底层，需免费注册 key）若分词器保留停用词位置索引，即为全学科版 PubMed
-
-## 浏览器型学术辅助源（JS 界面，浏览器工具专用）
-
+- **总规律（2026-09-20 三轮实测终版）**：学术短语频次查证没有完全可靠的单一 API。OpenAlex/arXiv/Europe PMC/Crossref 停用词无位置索引，功能词组合必然同值（可检测，安全失败）；PubMed 是三态引擎（词典命中/静默词袋/垃圾小值），count 必须验 querytranslation。可靠链路：实词短语直接 OpenAlex；功能词组合 = OpenAlex 同值检测（触发即弃）→ Ngram 真短语（图书语料，如 play a role in 为 on 的 245 倍）→ Google site: 浏览器。同值检测和 querytranslation 判读是两道强制闸门，「数字有区分」本身不再是可信判据
 - **Academic Phrasebank**（曼彻斯特大学，phrasebank.manchester.ac.uk）：按修辞功能组织的学术短语库（introducing work / describing methods / reporting results / discussing findings / writing conclusions / referring to sources 六板块），回答「论文某个部分该用什么句式」。不是频次语料，是人工筛选惯例集，适合写作教学与初稿搭建，与频次查证互补
 - **MICUSP / MICASE**（密歇根大学，micusp.elicorpora.info / micase.elicorpora.info）：学生高年级论文语料（830 篇，含 A-C 成绩等级标注，可对比优等生与及格生的写法差异）/ 学术口语语料。JS 查询界面，curl 只拿应用壳，浏览器专用，低频场景
 
