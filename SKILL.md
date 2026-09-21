@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.10.0
+version: 1.11.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -42,7 +42,7 @@ metadata:
 | G 搭配发现 | "play a role 后面接什么""这里该用哪个介词" | Linggle 填空（`_`/`*`/`?`/词性标签）→ 词典例句 |
 | H 语义韵查证 | "commit success 哪里怪""这个词什么感情色彩""语法对但感觉不对" | Linggle 填空看搭配伙伴分布 → Ngram 交叉验证 → 词典释义 |
 | I 学术语域 | "论文里能这么写吗""学科惯例是什么" | OpenAlex 计数/趋势 → PubMed（生医）/arXiv（理工）→ Google site: 浏览器（低频） |
-| J 引言语步 | "我的引言结构行不行""摘要怎么组织" | 语步巡逻（三语步完整性，尤其 Move 2 缺失）→ Phrasebank 对应板块候选句式 → 语步标志短语学科内频率查证（OpenAlex） |
+| J 引言/摘要语步 | "我的引言结构行不行""摘要怎么组织" | 语步巡逻（引言 CARS 三语步完整性，尤其 Move 2 缺失；摘要按学科期望表，Hyland 五语步框架）→ Phrasebank 对应板块候选句式 → 语步标志短语学科内频率查证（OpenAlex） |
 
 不要全查 13 个源。词典直接收录（A 级）+ 语料高频（B 级）两条证据齐了即可下结论。
 
@@ -182,7 +182,7 @@ metadata:
 6. **末尾汇总**：本次错误类型分布 + 下次自查一行 + 固定一行「想深究哪一条，回复编号」——对话式交付优于被动标记（Sarré et al., 2019）
 
 **学术文本批改的增强版式**（用户贴的是论文摘要/引言/文献综述/结论，或明示学术语境时启用；jev 评估 teacher 场景就绪度 0.34 的针对性补强，目标是产出教师可直接转发学生的成品）：
-- **批改前置扫描**：先通读全段做四条学术链的专项巡逻——①结论动词链（每个结果句的动词强度 vs 证据类型：prove/demonstrate 只配确定性证据，suggest/indicate 配相关性证据，错配逐条标记）；②引用动词链（文献综述里每个 X argues/claims/states 的态度是否与上下文立场一致，claim 用于中立转述时标记为高风险）；③结论链（future work/research 表达与全文学科惯例的一致性）；④引言语步链（仅当文本是引言/摘要时激活，Swales CARS 三语步：Move 1 确立领域 → Move 2 指出缺口 → Move 3 宣告本研究；学生引言最典型的病是 **Move 2 缺失**——没有缺口论证直接宣告本文做了什么，重点标记；判定按功能不按形式，标志短语如 However little research has / remains unclear / to fill this gap / This study aims to 可作 Move 2/3 的形式线索并学科内查频，Lu et al., 2020）。巡逻结果并入标记清单一起查证，不单独成段
+- **批改前置扫描**：先通读全段做四条学术链的专项巡逻——①结论动词链（每个结果句的动词强度 vs 证据类型：prove/demonstrate 只配确定性证据，suggest/indicate 配相关性证据，错配逐条标记）；②引用动词链（文献综述里每个 X argues/claims/states 的态度是否与上下文立场一致，claim 用于中立转述时标记为高风险）；③结论链（future work/research 表达与全文学科惯例的一致性）；④引言/摘要语步链（文本是引言或摘要时激活）——引言走 Swales CARS 三语步：Move 1 确立领域 → Move 2 指出缺口 → Move 3 宣告本研究，学生引言最典型的病是 **Move 2 缺失**（没有缺口论证直接宣告本文做了什么，重点标记）；判定按功能不按形式，标志短语如 However little research has / remains unclear / to fill this gap / This study aims to 可作形式线索并学科内查频（Lu et al., 2020），句首词束（sentence-initial bundles）是可靠的语步转换信号（Li et al., 2020; Khany & Malmir, 2020）。摘要按**学科期望表**（Hyland 五语步框架，工程 vs 社科，Razali & Samad, 2022）：目的语步两边必备；工程摘要方法语步必选且应占主导篇幅（占 79-81% 词数的实证，Zubir et al., 2021），背景可压缩、结论可省略；社科摘要背景/问题化是必要语境空间、结论承担评价功能，方法可变。**五语步完整性不是标准**——500 篇科学摘要仅 2.4% 用满五语步，社科常态是三语步（Ngai et al., 2018），禁止拿五语步模板卡学生。**被拒指纹**：方法与结果句未完成时态语态转换（过度主动+现在时）是被拒工程摘要的系统性失败模式（Kurniawan & Lubis, 2022），工程语境方法/结果句应转过去时+被动，此指纹与通用时态错误不同级——按学科惯例问题标记，不只按语法提示。巡逻结果并入标记清单一起查证，不单独成段
 - **报告主体保持通用格式**（原句→结论→证据→建议），但学术文本时每条证据链接优先指向学科源（OpenAlex/PubMed），通用语料证据降为第二位
 - **末尾汇总升级为教师版三件**：①错误类型分布表（全面诊断结果，按学术三项专项 + 通用搭配/语域/语义韵分组计数，学生最常错的排最前）；②本次最值得讲的一个点（与聚焦类的选择一致，配一条最强证据，教师可直接当课堂例句用）；③给学生的下一次自查清单（按本次错误类型轮换 2-3 条可操作动作，如「交稿前把所有 results 后面的动词圈出来，逐个问证据是相关还是因果」），每条动作对应本次报告里的实例编号。教学建议：多篇作业连续批改时，本次聚焦类优先选学生上一篇的高频错误类型（聚焦干预针对持续性错误，Kao et al., 2025）；课堂场景可先让学生两两互标疑点再自查修订，同伴互标先于语料查询可提升错误识别率（Kim & Emeliyanova, 2019）
 - **篇幅纪律不变**：批改模式每点 1-2 条最强证据的限量规则继续生效；反馈模式规则见第 4 步——聚焦模式主体只深纠 1-2 类（全面模式的 8 条护栏仅在其激活时适用），防止报告本身成为新的阅读负担（认知负荷控制，Lusta et al., 2025; Lee, 2019）
