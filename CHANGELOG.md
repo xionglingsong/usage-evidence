@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.0（2026-09-20）
+
+学术写作能力三项扩展（数据先行，全部锚点为本轮 OpenAlex 实测）：
+
+- **学术批改三项专项标记**：①结论动词与证据强度错配（the results indicate/suggest 各 647/483 万篇 vs prove 27 万篇，相关性证据写 prove 是 L2 高频错）；②引用动词态度错位（argues 10,553 篇为 claims 的 4 倍，claim 自带距离感，states 纯报告）；③第一人称误纠（we demonstrate that 250 万篇主流，we/I argue 合法，真错误是 I think 进学术文）
+- **学科自动推断**：未明示学科时按查询文本启发式选链路（临床词→生医，算法词→arXiv 交叉，默认总库），需要精度且无法推断才问
+- **Academic Phrasebank 调用时机**：修辞功能类问题（怎么开头/怎么谨慎表达/怎么写结论）走浏览器开对应板块取候选句式，候选短语回频次源验证——Phrasebank 出候选、语料库定频次
+
 ## 1.5.1（2026-09-20）
 
 PubMed 三态行为发现与总规律终版（自动测试四案例，querytranslation 字段揭穿）：

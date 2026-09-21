@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.5.1
+version: 1.6.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -52,7 +52,7 @@ metadata:
 - **浏览器工具**：Oxford 的短语与习语查询（curl 的 ?q= 参数无效，用站内搜索框跳到主干词条的 Idioms 板块）；牛津 curl 返回 0 字节时（短时限流，非指纹检测）也切浏览器。详见 sources.md
 - **介词查证的冠词绑定技巧**：查 X 后接什么介词时，Linggle 分别查 `the X _` 和 `a/an X _`——冠词会锁定介词（实测 the introduction 后 87.5% 是 of，an introduction 后 77.7% 是 to，两组分布截然不同）。介词与冠词是绑定组，分开查才准
 - **被挡降级**：Collins、Merriam-Webster、Ludwig 被 Cloudflare 挡自动化访问 → Ludwig 的功能由 Linggle（填空/对比）+ Linguee（权威例句）+ FreeDictionary（Webster's/AHD/Collins 内容）覆盖
-- **学术语域查证（I 类）**：OpenAlex 短语计数（约 2.5 亿文献的 title+abstract，免费无 key）+ `group_by=publication_year` 学术历时趋势；学科条件化用 concepts 过滤（先查 concepts id 再 filter）。生医语境加 PubMed esearch 计数，理工语境加 arXiv（https，读 totalResults）。Google 精确短语 + `site:edu` / `site:edu.cn` 做语域量级对比（**浏览器专用**，curl 是 JS 壳；结果数为估算只做同参数对比；`*` 通配不响应，通配用 Linggle `_`）。**OpenAlex 短语匹配只对实词组合可靠**，含介词/冠词/be 动词的组合静默退化为词袋（两候选计数完全相同即退化信号，禁用该组数字）。PubMed 是三态引擎——引号短语可能词典命中（可信）、静默变词袋（count 虚高，如 the data are 的 763 万实为单词 data 命中）、或词典外兜底（返回 2/0 等垃圾小值），**每次必须读 esearchresult.querytranslation**：保留引号短语且量级合理才可用，出现布尔扩展即弃。功能词组合的完整链路：OpenAlex 同值检测（触发即弃）→ PubMed（验 querytranslation）→ Ngram 真短语（图书语料）兜底。学术源数字表述为「X 篇文献出现」，与通用语料的「N 次」分开；学科证据与通用证据冲突时，学术写作语境以学科源优先
+- **学术语域查证（I 类）**：OpenAlex 短语计数（约 2.5 亿文献的 title+abstract，免费无 key）+ `group_by=publication_year` 学术历时趋势；学科条件化用 concepts 过滤（先查 concepts id 再 filter）。生医语境加 PubMed esearch 计数，理工语境加 arXiv（https，读 totalResults）。Google 精确短语 + `site:edu` / `site:edu.cn` 做语域量级对比（**浏览器专用**，curl 是 JS 壳；结果数为估算只做同参数对比；`*` 通配不响应，通配用 Linggle `_`）。**OpenAlex 短语匹配只对实词组合可靠**，含介词/冠词/be 动词的组合静默退化为词袋（两候选计数完全相同即退化信号，禁用该组数字）。PubMed 是三态引擎——引号短语可能词典命中（可信）、静默变词袋（count 虚高，如 the data are 的 763 万实为单词 data 命中）、或词典外兜底（返回 2/0 等垃圾小值），**每次必须读 esearchresult.querytranslation**：保留引号短语且量级合理才可用，出现布尔扩展即弃。功能词组合的完整链路：OpenAlex 同值检测（触发即弃）→ PubMed（验 querytranslation）→ Ngram 真短语（图书语料）兜底。学术源数字表述为「X 篇文献出现」，与通用语料的「N 次」分开；学科证据与通用证据冲突时，学术写作语境以学科源优先。**学科自动推断**：用户未明示学科时按查询文本启发式选链路——含疾病/治疗/临床/患者类词走生医（PubMed 优先 + OpenAlex concepts 过滤 medicine），含 model/algorithm/dataset/network/training 类词可加 arXiv 交叉，其余默认 OpenAlex 总库；需要学科精度而无法推断时问一句，不瞎猜。**修辞功能类问题走 Academic Phrasebank**（浏览器，phrasebank.manchester.ac.uk）：用户问「引言怎么开头」「怎么谨慎表达」「结论怎么写」这类部位/功能问题，打开对应板块（Introducing work / Being cautious / Writing conclusions 等）取候选句式给用户挑选，候选短语再回频次源验证真实使用量——Phrasebank 出候选、语料库定频次，两者分工
 - **Ngram 定量对比**：`node scripts/ngram.mjs "phrase A,phrase B"`，自动输出近年均值、峰值年份、趋势和相对倍数。用户文章是英式或美式时加 `--corpus en-GB-2019` / `--corpus en-US-2019` 分库查证；未说明变体时用默认 en-2019 总库，若该搭配在两库频率差异显著，分别报告并在结论里标注地区归属
 - **语义韵敏感词主动查**：commit、cause、pose、suffer、set in、happen、undergo、inflict、perpetrate、endure 、bring about（积极韵，与 cause 相对）、rife、budge 等词天生带氛围倾向，词典无此标签，且**对母语者直觉也是隐形的，系统语料分析是唯一检测途径**（Liu, 2020; Jurko, 2021）。用户问"哪里怪/语法对但感觉不对"，或建议中涉及这些词时，Linggle 查 `动词 + 冠词 + _`（如 commit a _）或 `动词 + _`，把返回伙伴按语义类别归类（消极/积极/中性/仅技术语境），伙伴分布即语义韵的直接证据；再用 Ngram 对比可疑搭配 vs 常规搭配交叉验证（如 commit an achievement vs achieve an achievement）。**注意语域条件化**：同一词在不同语域可呈现相反极性（如 erupted 在体育新闻偏积极、硬新闻偏消极，Nelson, 2005），用户语境有明显语域特征时在结论中注明
 
@@ -164,6 +164,9 @@ metadata:
    - 语义韵敏感词（commit/cause/pose/suffer 等的宾语氛围是否匹配）
    - 近义词互换导致的韵错位（如 gain/obtain 被当完全同义互换——母语者 gain 限积极韵、obtain 中性，Zhang, 2009；cause/lead to 同理）
    - 语域错位（口语表达进了正式文）
+   - 学术专项一，结论动词与证据强度错配（hedging 校准）——prove/demonstrate 用于确定性证据，suggest/indicate 配非确定性结论；实测 the results indicate 647 万篇、suggest 483 万篇，prove 仅 27 万篇（差 18-24 倍），把相关性证据写成 the results prove 是 L2 学术写作高频问题，改法先看证据类型再选动词
+   - 学术专项二，引用动词态度错位——argues 是中性主流（Smith argues 10,553 篇，是 claims 2,551 篇的 4 倍），claim 对他人观点自带距离感或质疑色彩（写 Smith claims 等于暗示你不太信他），contend/assert 书面但低频（约 1,100-1,400 篇），states 是纯报告不带立场；引自己支持的观点用 argues/suggests，需要保持距离再用 claims
+   - 学术专项三，第一人称误纠——we 不是错误（we demonstrate that 250 万篇、we argue that 89 万篇都是主流），人文社科 I argue that 也有 48 万篇；不要把 we 改成 this paper 机械去人称，演示发现类用 demonstrate/show，论证主张类用 argue；真正的错误是口语化的 I think/I believe 进学术文
    - 归因词块定位堆叠（according to…、as shown in… 等连续出现在段首句开头——专家惯例是嵌入句中非初始位置，如 X leads to Y, according to Z，Wang & Zhang, 2021）
    - 同框架过度重复（同一词块或句式框架在文中反复出现，如 it is important to note that 连用多次——L2 写作者词块总量常超母语者但结构窄、重复高，靠套话堆学术腔，Li & Lei, 2025；提示变换或压缩为短语结构）
    - 不标：复杂句法、风格偏好、无查证依据的"感觉"；用户明示的修辞性语义韵冲突（故意制造搭配不协调以达成讽刺或幽默效果，Jensen, 2024）不算错误
