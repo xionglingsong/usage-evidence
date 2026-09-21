@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.1（2026-09-20）
+
+- Ngram 源补网络提示：books.google.com 国内直连被墙（实测 curl exit 28、浏览器 ERR_FAILED），查证与点击锚链接均需代理；无代理打开失败是网络限制非链接损坏，证据以 JSON API 数字为准
+
 ## 1.7.0（2026-09-20）
 
 学术批改端到端特化（决策依据：typesafe-jev 结构化评估——成熟度 2.59/5，teacher 场景就绪度仅 0.34 为最大缺口，next_priority 选择整段学术批改 0.67）：

@@ -107,6 +107,7 @@ curl 统一带 UA：`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
 ## 8. Google Books Ngram（定量频率）
 
 - JSON API：`https://books.google.com/ngrams/json?content={A},{B}&year_start=1800&year_end=2019&corpus=en-2019&smoothing=3`
+- **网络提示（2026-09-20 实测）**：books.google.com 国内直连被墙（curl exit 28 / 浏览器 ERR_FAILED），查证 curl 与用户点击可视化锚链接都需要代理环境（ClashX 开启且系统代理生效）。无代理环境打开失败属网络限制，不是链接损坏——证据数字以 JSON API 结果为准，可视化页面仅作人工核对渠道
   - 多短语逗号分隔（URL 编码 `%2C`）；**区分大小写**，变体分别列出对比
   - corpus：`en-2019`（默认总库）/ `en-US-2019` / `en-GB-2019` / `eng_2019`（百万书平衡库，查 19 世纪前用它）
 - curl + 代理，或直接用 `scripts/ngram.mjs`（自动统计均值/峰值/趋势/倍数）
