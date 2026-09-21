@@ -29,7 +29,7 @@ In recent years, with the rapid development of online education, more and more r
    改法：We **draw the conclusion** that（或直接 We conclude that）
 
 6. **do research / do more researches** → ❌ 虚化动词错配 + 不可数名词复数化（双重错误）
-   conduct research 715,110 篇 vs do research 208,357 篇（3.4 倍）；牛津词典 research 词条标注 [uncountable]，researches 不是「多项研究」的意思｜[OpenAlex 检索](https://openalex.org/works?search=%22conduct%20research%22) · [OALD research 词条](https://www.oxfordlearnersdictionaries.com/definition/english/research)
+   conduct research 715,110 篇 vs do research 208,357 篇（3.4 倍）；牛津词典 research 词条标注 [uncountable]，原文注明复数 researches 仅英式英语偶用且 much less frequent——学术写作用 several studies 更稳｜[OpenAlex 检索](https://openalex.org/works?search=%22conduct%20research%22) · [OALD research 词条](https://www.oxfordlearnersdictionaries.com/definition/english/research)
    改法：**conduct research** on / In the future, we will **conduct further research** on
 
 7. **As far as we know** → ⚠️ 语域错位（口语体进学术文）

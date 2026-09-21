@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.1（2026-09-20）
+
+- 新增单点查证速览样例 examples/quick-check-sample.md（researches 词典路线），README 输出样例双索引
+- 批改样例 researches 表述按牛津原文修正（英式偶用且 much less frequent，非绝对错误）
+- sources.md 补退化新证据：冠词 an 与限定词 several 同样触发同值退化（conduct/perform/carry out an analysis 三者同值 51,372,385）
+
 ## 1.8.0（2026-09-20）
 
 回归防线：新增 scripts/smoke-test.mjs，五项核心不变量自测（改版后运行，防源退化与规则回归）——
