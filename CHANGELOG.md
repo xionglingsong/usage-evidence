@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.9.2（2026-09-20）
+
+方向一第三批文献落地（corpus self-correction vs teacher correction，用户 Consensus 检索），补上错误类型 × 反馈方式的匹配轴：
+
+- **路由规则**：词汇/搭配/词形类错误自查邀请优先（语料自查解决率词形 93.6%、搭配 62.7%，Yang & Ren, 2025；AI 替学生解读索引行，认知负荷由 skill 承担）；语法/结构/省略类不发自查邀请，直接提示 + 指路语法工具（语料查询对此类无效且学生易弃用，Satake, 2024, 2020；与「语法非强项」边界互证）
+- **v1.9.1 设计获文献确认**：间接编码 + 语料访问产生最优自主性（Tono et al., 2014; Crosthwaite et al., 2020），过于直接的纠正消灭查证动机——「错误类型提示 + 查询路径」即 Teacher-Coded DDL 的 AI 实现
+- **教师版三件套补课堂建议**：同伴互标先于自查可提升错误识别率（Kim & Emeliyanova, 2019）
+
 ## 1.9.1（2026-09-20）
 
 方向一第二批文献落地（direct vs indirect WCF for collocations，用户 Consensus 检索），修正 v1.9.0 的修订邀请设计：
