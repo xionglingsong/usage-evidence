@@ -1,0 +1,14 @@
+{
+  "model": "jev-1.13.0",
+  "date": "2026-09-20",
+  "purpose": "学术写作场景现状评估与优化方向决策",
+  "results": {
+    "academic_maturity": {"score": 2.59, "distribution": {"2": 0.38, "3": 0.61}, "confidence": 0.66},
+    "next_priority": {"pick": "batch_academic_proofread", "probabilities": {"core_key": 0.12, "coca_manual": 0.02, "teaching_output": 0.19, "batch_academic_proofread": 0.67}, "confidence": 0.57},
+    "student_ready": 0.69,
+    "teacher_ready": 0.34,
+    "core_key_worth": 0.64
+  },
+  "decision": "实施 batch_academic_proofread（含 teaching_output 要素合并），产出 v1.7.0",
+  "script": ".ekko-tmp/jev-usage-evidence.mjs（工作区临时，评估逻辑见本文件 results）"
+}

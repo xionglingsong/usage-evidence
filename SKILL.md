@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.6.0
+version: 1.7.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -174,6 +174,12 @@ metadata:
 4. **输出批改报告**，按原文顺序：
    - 原句片段 → 结论（✅/⚠️/❌）→ 一句话原话依据 + 来源 → 修改建议
 5. **末尾汇总**：本次错误类型分布 + 下次自查一行
+
+**学术文本批改的增强版式**（用户贴的是论文摘要/引言/文献综述/结论，或明示学术语境时启用；jev 评估 teacher 场景就绪度 0.34 的针对性补强，目标是产出教师可直接转发学生的成品）：
+- **批改前置扫描**：先通读全段做三条学术链的专项巡逻——①结论动词链（每个结果句的动词强度 vs 证据类型：prove/demonstrate 只配确定性证据，suggest/indicate 配相关性证据，错配逐条标记）；②引用动词链（文献综述里每个 X argues/claims/states 的态度是否与上下文立场一致，claim 用于中立转述时标记为高风险）；③结论链（future work/research 表达与全文学科惯例的一致性）。巡逻结果并入标记清单一起查证，不单独成段
+- **报告主体保持通用格式**（原句→结论→证据→建议），但学术文本时每条证据链接优先指向学科源（OpenAlex/PubMed），通用语料证据降为第二位
+- **末尾汇总升级为教师版三件**：①错误类型分布表（按学术三项专项 + 通用搭配/语域/语义韵分组计数，学生最常错的排最前）；②本次最值得讲的一个点（只挑一个，配一条最强证据，教师可直接当课堂例句用）；③给学生的下一次自查清单（按本次错误类型轮换 2-3 条可操作动作，如「交稿前把所有 results 后面的动词圈出来，逐个问证据是相关还是因果」），每条动作对应本次报告里的实例编号
+- **篇幅纪律不变**：批改模式每点 1-2 条最强证据的限量规则在学术版式下继续生效；整篇报告的错误条目超过 8 条时，主体只详列按严重度排序的前 8 条，其余进末尾汇总的类型分布表计数，防止报告本身成为新的阅读负担（认知负荷控制，Lusta et al., 2025）
 
 ## 边界
 
