@@ -60,7 +60,12 @@ try {
   const local = readFileSync(join(root, "SKILL.md"), "utf-8").match(/^version:\s*(.+)$/m)[1];
   const raw = execSync(`https_proxy=${PROXY} curl -s -m 15 'https://raw.githubusercontent.com/xionglingsong/usage-evidence/main/SKILL.md'`, { encoding: "utf-8", timeout: 20000 });
   const remote = raw.match(/^version:\s*(.+)$/m)?.[1]?.trim();
-  record("版本自查链路", remote === local.trim(), `本地 ${local.trim()} vs 远程 ${remote ?? "不可达"}`);
+  // 远程 < 本地 = 刚发版、raw CDN 多节点传播延迟（几分钟自愈），WARN 不 FAIL；远程 > 本地 = 本地落后需更新，FAIL
+  const lv = local.trim().split(".").map(Number), rv = (remote ?? "0.0.0").split(".").map(Number);
+  const behind = rv[0] > lv[0] || (rv[0] === lv[0] && rv[1] > lv[1]) || (rv[0] === lv[0] && rv[1] === lv[1] && rv[2] > lv[2]);
+  const ahead = rv[0] < lv[0] || (rv[0] === lv[0] && rv[1] < lv[1]) || (rv[0] === lv[0] && rv[1] === lv[1] && rv[2] < lv[2]);
+  if (ahead) { record("版本自查链路", true, `本地 ${local.trim()} 领先远程 ${remote}（刚发版，CDN 传播延迟，几分钟自愈）`); results[results.length - 1].status = "WARN"; }
+  else record("版本自查链路", !behind && !!remote, `本地 ${local.trim()} vs 远程 ${remote ?? "不可达"}${behind ? "（本地落后，需 git pull）" : ""}`);
 } catch (e) { record("版本自查链路", false, "网络受限（代理不可达）", true); }
 
 // ---------- 汇总 ----------
