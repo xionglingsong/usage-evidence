@@ -1,6 +1,6 @@
 ---
 name: usage-evidence
-version: 1.16.0
+version: 1.17.0
 description: Evidence-based English usage verification for writing and translation. When the user asks whether a word, phrase, collocation, idiom, or Chinese-to-English translation is idiomatic or correct, query real online dictionaries and corpora (Oxford, Cambridge, Longman, Linguee, Google Books Ngram, etc.) and answer with cited evidence instead of model intuition.
 metadata:
   keywords:
@@ -56,6 +56,8 @@ metadata:
 
 ### 第二步：查证（各源 URL 模板、选择器、访问方式详见 references/sources.md）
 
+**证据充分性自检与迭代补查**（查证第一轮结束、落笔前内部执行）：评估当前证据能否支撑结论——①源可信吗（同值退化检测 / PubMed querytranslation 判读 / Ngram 兜底是否都过）；②证据方向与结论一致吗（数量级差、例句语境）；③多源一致吗（见置信度三档）。**不足就进第二轮定向补查，不硬下结论**——按缺口类型选源：词义缺口回词典、频次缺口回 OpenAlex/Ngram、语域缺口回学科源、平行句缺口回 Linguee；两轮仍不足则如实说「证据不足，倾向性意见如下」并给保守建议（迭代检索-生成协同的元策略，Gao et al., 2023 系 Iterative RAG 系列）
+
 - **curl 直连**：Cambridge、Longman、Etymonline、Linguee、Oxford（单词词条，2026-09-20 复核通过）、Linggle（JSON API：`search.linggle.com/api/ngram/{urlencoded 查询式}`，**路径传参，?q= 会 301 到空结果**）—— 在 code_exec 里拉取后按选择器或 JSON 解析
 - **curl + 代理**：UrbanDictionary、FreeDictionary、Ngram、Thesaurus —— 先 `export https_proxy=<你的代理地址>（示例 http://127.0.0.1:7890 为 Clash 默认端口）`
 - **浏览器工具**：Oxford 的短语与习语查询（curl 的 ?q= 参数无效，用站内搜索框跳到主干词条的 Idioms 板块）；牛津 curl 返回 0 字节时（短时限流，非指纹检测）也切浏览器。详见 sources.md
@@ -105,7 +107,7 @@ metadata:
 | heavy rain 760,000 次（89.9%）| [Linggle 查询结果](https://search.linggle.com/?q=heavy+rain) |
 | "所有接受采访者做出了匿名的承诺" ↔ "All respondents have been promised anonymity" | [Linguee 平行句（daccess-ods.un.org）](https://www.linguee.com/english-chinese/search?query=promised+anonymity) |
 
-文本类证据用引号逐字引用，不改写、不缩写、不"翻译成自己的话"；频率类原样给数字与百分比；双语平行句两侧都引。**每条证据附可溯源的真实链接**（Markdown 格式，来源名做锚文本——表格出处列同样如此），用户点开出处即可核对——把"信任本 skill"变成"可验证"（批判性使用证据，Liu et al., 2024）。链接纪律：按 references/sources.md 的 URL 模板构造或用实际访问地址，**禁止编造 URL**；Ngram 附可视化页面（如 books.google.com/ngrams/graph?content=heavy+rain,strong+rain&year_start=1900&year_end=2019&corpus=en-2019），不是数据接口；牛津附最终词条页（如 oxfordlearnersdictionaries.com/definition/english/rain_1），不是搜索过程页；Linggle 附查询式 URL（如 search.linggle.com/?q=commit+a+_），用户点开即见完整分布。**深查总计精选 3-5 条最强证据，绝不超过 5 条；速览严格限 1-2 条；批改每点严格限 1-2 条。**按 A→C 分级排序，A 级优先——DDL 研究证实海量语料罗列会引发读者过载与误读（Söğüt, 2024; Farooqui, 2025），宁精勿滥。查不到原话的源如实标注"该源未返回可用原文"。
+文本类证据用引号逐字引用，不改写、不缩写、不"翻译成自己的话"；频率类原样给数字与百分比；双语平行句两侧都引。**每条证据附可溯源的真实链接**（Markdown 格式，来源名做锚文本——表格出处列同样如此），用户点开出处即可核对——把"信任本 skill"变成"可验证"（批判性使用证据，Liu et al., 2024）。链接纪律：按 references/sources.md 的 URL 模板构造或用实际访问地址，**禁止编造 URL**；**每条引用必须直接支撑其所在的结论句——引了但与该结论无关的装饰性引用同样禁止**（citation-grounded 防幻觉原则，Gao et al., 2023; Wei et al., 2024），宁可少引一条，不引一条撑不住结论的；Ngram 附可视化页面（如 books.google.com/ngrams/graph?content=heavy+rain,strong+rain&year_start=1900&year_end=2019&corpus=en-2019），不是数据接口；牛津附最终词条页（如 oxfordlearnersdictionaries.com/definition/english/rain_1），不是搜索过程页；Linggle 附查询式 URL（如 search.linggle.com/?q=commit+a+_），用户点开即见完整分布。**深查总计精选 3-5 条最强证据，绝不超过 5 条；速览严格限 1-2 条；批改每点严格限 1-2 条。**按 A→C 分级排序，A 级优先——DDL 研究证实海量语料罗列会引发读者过载与误读（Söğüt, 2024; Farooqui, 2025），宁精勿滥。查不到原话的源如实标注"该源未返回可用原文"。**置信度三档（多源证据聚合的可信度评分原则，Wang et al., 2025 系 Multi-Agent Evidence Retrieval）**——高置信：≥2 个独立源方向一致（如词典收录 + 语料高频），下确定结论；中置信：单一源（即使 A 级），用倾向性表述（「词典/语料显示……」）；低置信：源冲突或全部退化弃用，明说「证据不足」，给保守建议。多源一致性和证据数量级是判据，不是源的数量本身
 
 **来源锚链接速查表**（出处列照此构造，花括号为占位符，查询词需 URL 编码）：
 
@@ -167,6 +169,7 @@ metadata:
 4. 是否把术语、频率和工具结果翻成用户能做决定的话，并保留可核对的原话与链接？
 5. 是否只给一个下一步动作，并让用户至少有一次自己产出的机会；若用户只要判定，是否尊重其选择？
 6. 措辞是否评价表达而非评价人，明确肯定已做对之处，并允许「没有问题」作为结论？
+7. 查证侧三问（发前自省，Self-RAG 自反思原则，Asai et al., 2024）：本轮结论对应的每条证据是否都真实查到并验过可信度？结论是否被证据支撑而非超出证据？是否每一条引用都直接支撑了所在句子？任一为否则回查补正，不带着存疑证据上屏
 
 ## 批量模式（用户一次提出多个疑问时进入）
 
