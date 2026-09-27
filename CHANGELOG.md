@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.18.0（2026-09-27）
+
+方向修正后的 SLA 与认知科学文献落地（Consensus API 五组检索，作者名全部取自 API 返回、经核实；v1.17 的 NLP 工程视角按用户指正替换为二语习得与认知科学证据）：
+
+- **词块单位意识**（核心理念补记）：词块整体表征与加工（lexical bundles 词监测实验，Jeong & Chen, 2018）；母语者整块调取 vs 学习者逐词拼接（kick buckets vs kick doors，Milburn et al., 2025）——查证/仿写/记忆以词块为单位
+- **仿写=产出性任务**：接受→产出的推动取决于任务类型与重复频率（Teng & Xu, 2022）——当场改写要求换内容而非照抄，后续会话值得再次产出
+- **自查邀请=高投入负荷任务**（Involvement Load Hypothesis，Teng & Zhang, 2021）：need/search/evaluation 三要素决定习得深度——带工具自查的认知科学正名
+- **会话内重复提取 + 累积复习**（within-session retrieval，Nakata, 2016；cumulative testing，Maie et al., 2025）：同一会话提取 2 次以上，多词条混测优于单卡重复
+- 未动 v1.17 的查证侧纪律（迭代补查/置信度三档/装饰性引用禁令），本版补学习者侧认知机制
+
 ## 1.17.0（2026-09-27）
 
 查证编排元策略系统化（方向五，Consensus API 真实文献驱动，四组检索）：
